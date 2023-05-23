@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-1. [About](/README.md#about)  
-2. [General Requirements](/README.md#general-requirements)
-3. [Project Requirements](/README.md#project-requirements)
-4. [Contributing](/README.md#contributing)
+1. [About](#about)  
+2. [General Requirements](#general-requirements)
+3. [Project Requirements](#project-requirements)
+4. [Contributing](#contributing)
 
 
 ## About
