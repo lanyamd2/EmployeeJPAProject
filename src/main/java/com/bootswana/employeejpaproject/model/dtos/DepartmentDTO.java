@@ -20,12 +20,12 @@ public class DepartmentDTO {
     private String deptName;
 
     @OneToMany(mappedBy = "deptNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<DeptEmpDTO> departmentEmployees;
 
     @OneToMany(mappedBy = "deptNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<DeptManagerDTO> departmentManagers;
 

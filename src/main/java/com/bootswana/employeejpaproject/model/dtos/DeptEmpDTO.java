@@ -14,13 +14,13 @@ public class DeptEmpDTO {
     private DeptEmpDTOId id;
 
     @MapsId("empNo")
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "emp_no", nullable = false)
     private EmployeeDTO empNo;
 
     @MapsId("deptNo")
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "dept_no", nullable = false)
     private DepartmentDTO deptNo;

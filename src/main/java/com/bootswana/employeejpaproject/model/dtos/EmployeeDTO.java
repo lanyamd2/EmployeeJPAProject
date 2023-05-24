@@ -39,21 +39,21 @@ public class EmployeeDTO {
     private LocalDate hireDate;
 
     @OneToMany(mappedBy = "empNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<DeptEmpDTO> employeeDepartments;
 
     @OneToMany(mappedBy = "empNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<DeptManagerDTO> employeeManagers;
     @OneToMany(mappedBy = "empNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<SalaryDTO> employeeSalaries;
 
     @OneToMany(mappedBy = "empNo",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<TitleDTO> employeeTitles;
 
@@ -140,4 +140,15 @@ public class EmployeeDTO {
         this.hireDate = hireDate;
     }
 
+    @Override
+    public String toString() {
+        return "EmployeeDTO{" +
+                "id=" + id +
+                ", birthDate=" + birthDate +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", hireDate=" + hireDate +
+                '}';
+    }
 }
