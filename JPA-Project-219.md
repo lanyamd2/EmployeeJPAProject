@@ -33,13 +33,16 @@ In addition to the general goals of projects, this project will give trainees an
   - `titles`
 - Create DAO and DTO classes to abstract the data access layer
 - Add methods to enable the following functionality:
-  - Find employees by last name
-  - Find all the employees who worked in a named department on a given date
-  - What is the average salary for a named department on a given date?
-  - Given a job title name, what is the range of salary values within a given year?
-  - Provide a summary of the size of each department (number of staff) over a given period (start year to end year)
-  - Is there a gender pay gap? If so, quantify it
+  - Find employees by last name (Hussein -> EmployeeRepository)
+  - Find all the employees who worked in a named department on a given date (Chamara -> DepartmentRepository )
+  - What is the average salary for a named department on a given date? (Usman)
+  - Given a job title name, what is the range of salary values within a given year? (Hussein)
+  - Provide a summary of the size of each department (number of staff) over a given period (start year to end year) (Lanya)
+  - Is there a gender pay gap? If so, quantify it (Hussein)
 - Add 3 methods of your own to investigate similar questions
+  - list the managers for a department in chronological order (Chamara)
+  -average salary of a given title every year between 2 given years  (Lanya)
+  -average yearly earning of an employee in their first 5 years (Usman)
 - Configure a Spring Boot application to host the JPA classes
 - Use Spring Boot Test to create a comprehensive suite for your JPA classes and your DAO/DTO classes
 - Include the result of your testing in the ```README.md``` file for the project on GitHub
