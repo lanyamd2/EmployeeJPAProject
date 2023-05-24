@@ -1,17 +1,16 @@
-package com.bootswana.employeejpaproject.model;
+package com.bootswana.employeejpaproject.model.dtos;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "salaries")
-public class SalaryDTO {
+@Table(name = "titles")
+public class TitleDTO {
     @EmbeddedId
-    private SalaryDTOId id;
+    private TitleDTOId id;
 
     @MapsId("empNo")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -19,19 +18,14 @@ public class SalaryDTO {
     @JoinColumn(name = "emp_no", nullable = false)
     private EmployeeDTO empNo;
 
-    @NotNull
-    @Column(name = "salary", nullable = false)
-    private Integer salary;
-
-    @NotNull
-    @Column(name = "to_date", nullable = false)
+    @Column(name = "to_date")
     private LocalDate toDate;
 
-    public SalaryDTOId getId() {
+    public TitleDTOId getId() {
         return id;
     }
 
-    public void setId(SalaryDTOId id) {
+    public void setId(TitleDTOId id) {
         this.id = id;
     }
 
@@ -41,14 +35,6 @@ public class SalaryDTO {
 
     public void setEmpNo(EmployeeDTO empNo) {
         this.empNo = empNo;
-    }
-
-    public Integer getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Integer salary) {
-        this.salary = salary;
     }
 
     public LocalDate getToDate() {

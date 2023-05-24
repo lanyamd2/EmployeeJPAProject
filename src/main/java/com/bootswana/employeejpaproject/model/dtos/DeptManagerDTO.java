@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.model;
+package com.bootswana.employeejpaproject.model.dtos;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

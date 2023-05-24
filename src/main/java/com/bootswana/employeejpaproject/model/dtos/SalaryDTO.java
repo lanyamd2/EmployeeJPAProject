@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.model;
+package com.bootswana.employeejpaproject.model.dtos;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,10 +8,10 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dept_emp")
-public class DeptEmpDTO {
+@Table(name = "salaries")
+public class SalaryDTO {
     @EmbeddedId
-    private DeptEmpDTOId id;
+    private SalaryDTOId id;
 
     @MapsId("empNo")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -19,25 +19,19 @@ public class DeptEmpDTO {
     @JoinColumn(name = "emp_no", nullable = false)
     private EmployeeDTO empNo;
 
-    @MapsId("deptNo")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "dept_no", nullable = false)
-    private DepartmentDTO deptNo;
-
     @NotNull
-    @Column(name = "from_date", nullable = false)
-    private LocalDate fromDate;
+    @Column(name = "salary", nullable = false)
+    private Integer salary;
 
     @NotNull
     @Column(name = "to_date", nullable = false)
     private LocalDate toDate;
 
-    public DeptEmpDTOId getId() {
+    public SalaryDTOId getId() {
         return id;
     }
 
-    public void setId(DeptEmpDTOId id) {
+    public void setId(SalaryDTOId id) {
         this.id = id;
     }
 
@@ -49,20 +43,12 @@ public class DeptEmpDTO {
         this.empNo = empNo;
     }
 
-    public DepartmentDTO getDeptNo() {
-        return deptNo;
+    public Integer getSalary() {
+        return salary;
     }
 
-    public void setDeptNo(DepartmentDTO deptNo) {
-        this.deptNo = deptNo;
-    }
-
-    public LocalDate getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDate fromDate) {
-        this.fromDate = fromDate;
+    public void setSalary(Integer salary) {
+        this.salary = salary;
     }
 
     public LocalDate getToDate() {

@@ -1,15 +1,17 @@
-package com.bootswana.employeejpaproject.model;
+package com.bootswana.employeejpaproject.model.dtos;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
 public class EmployeeDTO {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "emp_no", nullable = false)
     private Integer id;
 
@@ -35,6 +37,60 @@ public class EmployeeDTO {
     @NotNull
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
+
+    @OneToMany(mappedBy = "empNo",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    private List<DeptEmpDTO> employeeDepartments;
+
+    @OneToMany(mappedBy = "empNo",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    private List<DeptManagerDTO> employeeManagers;
+    @OneToMany(mappedBy = "empNo",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    private List<SalaryDTO> employeeSalaries;
+
+    @OneToMany(mappedBy = "empNo",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    private List<TitleDTO> employeeTitles;
+
+    public EmployeeDTO() {
+    }
+
+    public List<DeptEmpDTO> getEmployeeDepartments() {
+        return employeeDepartments;
+    }
+
+    public void setEmployeeDepartments(List<DeptEmpDTO> employeeDepartments) {
+        this.employeeDepartments = employeeDepartments;
+    }
+
+    public List<DeptManagerDTO> getEmployeeManagers() {
+        return employeeManagers;
+    }
+
+    public void setEmployeeManagers(List<DeptManagerDTO> employeeManagers) {
+        this.employeeManagers = employeeManagers;
+    }
+
+    public List<SalaryDTO> getEmployeeSalaries() {
+        return employeeSalaries;
+    }
+
+    public void setEmployeeSalaries(List<SalaryDTO> employeeSalaries) {
+        this.employeeSalaries = employeeSalaries;
+    }
+
+    public List<TitleDTO> getEmployeeTitles() {
+        return employeeTitles;
+    }
+
+    public void setEmployeeTitles(List<TitleDTO> employeeTitles) {
+        this.employeeTitles = employeeTitles;
+    }
 
     public Integer getId() {
         return id;
