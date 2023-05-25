@@ -1,5 +1,7 @@
 package com.bootswana.employeejpaproject;
 
+import com.bootswana.employeejpaproject.services.DepartmentsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,18 +17,25 @@ public class EmployeeJpaProjectApplication {
 
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
 
+	@Autowired
+	DepartmentsService departmentsService;
+
 	public static void main(String[] args) {
-		ConfigurableApplicationContext ctx = SpringApplication.run(EmployeeJpaProjectApplication.class, args);
-		menuLoop();
-		ctx.close();
+		SpringApplication.run(EmployeeJpaProjectApplication.class, args);
+
+//		ConfigurableApplicationContext ctx = SpringApplication.run(EmployeeJpaProjectApplication.class, args);
+//		menuLoop();
+//		ctx.close();
 	}
 
 	@Bean
 	public CommandLineRunner runner() {
+
+		menuLoop(departmentsService);
 		return args -> logger.log(Level.SEVERE, "Test");
 	}
 
-	private static void menuLoop() {
+	private static void menuLoop(DepartmentsService departmentsService) {
 		logger.log(Level.INFO, "Loading menu");
 
 		String choice;
@@ -37,7 +46,11 @@ public class EmployeeJpaProjectApplication {
 				case "2" -> logger.log(Level.INFO, "User chose to \"Find all the employees who worked in a named department on a given date\".");
 				case "3" -> logger.log(Level.INFO, "User chose to \"average salary for a named department on a given date\".");
 				case "4" -> logger.log(Level.INFO, "User chose to \"range of salary values within a given year\".");
-				case "5" -> logger.log(Level.INFO, "User chose to \"summary of the size of each department (number of staff)\".");
+				case "5" -> {
+					logger.log(Level.INFO, "User chose to \"summary of the size of each department (number of staff)\".");
+					departmentsService.createDepartmentSummary();
+
+				}
 				case "6" -> logger.log(Level.INFO, "User chose to \"gender pay gap\".");
 				case "7" -> logger.log(Level.INFO, "User chose to \"Unavailable\".");
 				case "8" -> logger.log(Level.INFO, "User chose to \"Unavailable\".");
