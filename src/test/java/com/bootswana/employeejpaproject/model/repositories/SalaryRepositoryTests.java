@@ -22,9 +22,6 @@ class SalaryRepositoryTests {
     @Autowired
     SalaryRepository salaryRepository;
 
-    @Autowired
-    SalariesService salariesService;
-
     @Test
     void contextLoads() {
     }
@@ -34,7 +31,7 @@ class SalaryRepositoryTests {
     void checkGetLowestAndHighestSalaryForJobTitleDuringAYear() {
         String jobTitle = "Engineer";
         int year = 2000;
-        Map<String, BigDecimal> salaryMap = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+        Map<String, BigDecimal> salaryMap = salaryRepository.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
         BigDecimal lowestAmountPaid = salaryMap.get("lowest_amount_paid");
         BigDecimal highestAmountPaid = salaryMap.get("highest_amount_paid");
         Assertions.assertTrue(lowestAmountPaid.compareTo(highestAmountPaid) <= 0);
@@ -45,7 +42,7 @@ class SalaryRepositoryTests {
     void checkGenderPayGapPercentageForEachJobTitleBetweenTwoYearsIsACorrectPercentage() {
         int fromYear = 1990;
         int toYear = 2000;
-        List<Object[]> resultRows = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+        List<Object[]> resultRows = salaryRepository.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
         for (Object[] row : resultRows) {
             BigDecimal payGapPercentage = (BigDecimal) row[1];
             Assertions.assertTrue(payGapPercentage.compareTo( new BigDecimal(100)) <= 0);
@@ -60,7 +57,7 @@ class SalaryRepositoryTests {
         String department = "Finance";
         LocalDate date = LocalDate.of(1995, 6, 26);
 
-        Map<String, BigDecimal> salaryMap = salariesService.getAverageSalaryForDepartmentOnGivenDate(department, date);
+        Map<String, BigDecimal> salaryMap = salaryRepository.getAverageSalaryForDepartmentOnGivenDate(department, date);
         BigDecimal averageSalary = salaryMap.get("average_salary");
         Assertions.assertEquals(expected.doubleValue(), averageSalary.doubleValue());
     }
@@ -70,7 +67,7 @@ class SalaryRepositoryTests {
     void checkGetFirstFiveSalariesOfAnEmployeeByEmployeeNumber() {
         int empNo = 10001;
 
-        List<Integer> salaryList = salariesService.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+        List<Integer> salaryList = salaryRepository.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
         for (Integer salary : salaryList) {
             Assertions.assertTrue(salary >= 0);
         }
