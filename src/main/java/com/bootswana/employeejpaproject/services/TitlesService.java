@@ -12,9 +12,4 @@ public class TitlesService {
     public TitlesService(TitleRepository titleRepository) {
         this.titleRepository = titleRepository;
     }
-
-//    public int[] getSalaryRangeForAJobTitleNameInAYear(String jobTitleName, LocalDate year) {
-//        // TODO
-//        return new int[] {};
-//    }
 }
