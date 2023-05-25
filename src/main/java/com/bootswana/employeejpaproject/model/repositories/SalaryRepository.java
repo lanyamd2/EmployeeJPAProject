@@ -20,7 +20,9 @@ public interface SalaryRepository extends JpaRepository<SalaryDTO, SalaryDTOId> 
     List<Object[]> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(int fromYear, int toYear);
 
     @Query(value = "SELECT CAST(AVG(s.salary) AS DECIMAL(10, 2)) AS average_salary FROM employees.departments d JOIN employees.dept_emp de ON d.dept_no = de.dept_no JOIN employees.salaries s ON de.emp_no = s.emp_no WHERE d.dept_name = :department AND :date BETWEEN s.from_date AND s.to_date", nativeQuery = true)
-
     Map<String, BigDecimal> getAverageSalaryForDepartmentOnGivenDate(String department, LocalDate date);
+
+    @Query(value = "SELECT salary FROM employees.salaries WHERE emp_no = :empNo ORDER BY from_date LIMIT 5", nativeQuery = true)
+    List<Integer> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(int empNo);
 
 }

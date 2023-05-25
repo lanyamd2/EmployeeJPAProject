@@ -58,9 +58,17 @@ class SalaryRepositoryTests {
 
         Map<String, BigDecimal> salaryMap = salaryRepository.getAverageSalaryForDepartmentOnGivenDate(department, date);
         BigDecimal averageSalary = salaryMap.get("average_salary");
+        Assertions.assertEquals(expected.doubleValue(), averageSalary.doubleValue());
+    }
 
-        System.out.println("Average Salary: " + averageSalary + " converted to 2 decimal places.");
+    @Test
+    @DisplayName("Check Get First Five Salaries Of An Employee By Employee Number")
+    void checkGetFirstFiveSalariesOfAnEmployeeByEmployeeNumber() {
+        int empNo = 10001;
 
-        assertEquals(expected.doubleValue(), salaryMap.get("average_salary").doubleValue());
+        List<Integer> salaryList = salaryRepository.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+        for (Integer salary : salaryList) {
+            Assertions.assertTrue(salary >= 0);
+        }
     }
 }
