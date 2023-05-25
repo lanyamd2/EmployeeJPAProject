@@ -26,19 +26,19 @@ class EmployeeJpaProjectApplicationTests {
 //		employeeRepository.findSQL(lastName, employeeTitle).forEach(e -> System.out.println(e.toString()));
 //	}
 
-	@Test
-	@DisplayName("Check Employee")
-	void checkFindByLastName() {
-		String jobTitle = "Senior Engineer";
-		int year = 2000;
-		Map<String, Integer> result = salaryRepository.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
-
-		for (Map.Entry<String, Integer> entry : result.entrySet()) {
-			String key = entry.getKey();
-			Integer value = entry.getValue();
-			System.out.println(key + ": " + value);
-		}
-	}
+//	@Test
+//	@DisplayName("Check Employee")
+//	void checkFindByLastName() {
+//		String jobTitle = "Senior Engineer";
+//		int year = 2000;
+//		Map<String, Integer> result = salaryRepository.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+//
+//		for (Map.Entry<String, Integer> entry : result.entrySet()) {
+//			String key = entry.getKey();
+//			Integer value = entry.getValue();
+//			System.out.println(key + ": " + value);
+//		}
+//	}
 
 	@Test
 	void contextLoads() {
