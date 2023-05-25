@@ -1,10 +1,16 @@
 package com.bootswana.employeejpaproject.model.repositories;
 
+import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @SpringBootTest
 class EmployeeRepositoryTests {
@@ -13,6 +19,10 @@ class EmployeeRepositoryTests {
 
     @Autowired
     SalaryRepository salaryRepository;
+
+    @Test
+    void contextLoads() {
+    }
 
     @Test
     @DisplayName("Check Get Employee By Last Name")
@@ -28,8 +38,42 @@ class EmployeeRepositoryTests {
         employeeRepository.getEmployeesByLastName(lastName).forEach(e -> Assertions.assertEquals(lastName, e.getLastName()));
     }
 
+
     @Test
-    void contextLoads() {
+    @DisplayName("Check that employees by department name query returns a filled list when requesting for a valid department")
+    void checkForEmployeesByDepartmentName() {
+        List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate("Customer Service", LocalDate.of(2000, 1, 1));
+        Assertions.assertTrue(employees.size() >= 1);
     }
 
+    @Test
+    @DisplayName("Check that employees by department name query returns an empty list when requesting for an invalid department")
+    void checkForEmployeesByInvalidDepartmentName() {
+        List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate("", LocalDate.of(2000, 1, 1));
+        Assertions.assertFalse(employees.size() >= 1);
+    }
+
+    @Test
+    @DisplayName("Check that managers by department name query returns a filled list when requesting for a valid department")
+    void checkForManagersByDepartmentName() {
+        List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically("Customer Service");
+        Assertions.assertTrue(managersAndDates.size() >= 1);
+
+        for (IManagerProjection managerAndDates : managersAndDates) {
+            LocalDate fromDate = managerAndDates.getFromDate();
+            LocalDate toDate = managerAndDates.getToDate();
+            System.out.println(managerAndDates.getEmpNo() + " From: " + fromDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " To: " + toDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            System.out.println(managerAndDates.getBirthDate());
+
+        }
+
+    }
+
+    @Test
+    @DisplayName("Check that managers by department name query returns an empty list when requesting for a non-existent department")
+    void checkForManagersByNonExistentDepartmentName() {
+        List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically("Human Resources");
+        Assertions.assertFalse(managersAndDates.size() <= 1);
+    }
 }
+
