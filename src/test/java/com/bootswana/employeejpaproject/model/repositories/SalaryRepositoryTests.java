@@ -5,12 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class SalaryRepositoryTests {
@@ -48,4 +49,18 @@ class SalaryRepositoryTests {
     void contextLoads() {
     }
 
+    @Test
+    @DisplayName("checkAverageSalaryFromDepartmentGivenDate")
+    void checkAverageSalaryFromDepartmentGivenDate() {
+        BigDecimal expected = BigDecimal.valueOf(68567.95);
+        String department = "Finance";
+        LocalDate date = LocalDate.of(1995, 6, 26);
+
+        Map<String, BigDecimal> salaryMap = salaryRepository.getAverageSalaryForDepartmentOnGivenDate(department, date);
+        BigDecimal averageSalary = salaryMap.get("average_salary");
+
+        System.out.println("Average Salary: " + averageSalary + " converted to 2 decimal places.");
+
+        assertEquals(expected.doubleValue(), salaryMap.get("average_salary").doubleValue());
+    }
 }
