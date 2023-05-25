@@ -19,11 +19,18 @@ public class EmployeesService {
         this.employeeRepository = employeeRepository;
     }
 
-//    public Optional<EmployeeDTO> getEmployeeByLastName(String lastName) {
-//        // TODO
-//        return Optional.empty();
-//    }
-
+    public void logEmployeesByLastName(String lastName) {
+        logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
+        List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
+        if(employees.size() == 0) {
+            logger.log(Level.INFO, "There are no employees with that last name.");
+        } else {
+            logger.log(Level.INFO, "Employees Found:");
+            for (EmployeeDTO employee : employees) {
+                logger.log(Level.INFO, employee.toString());
+            }
+        }
+    }
 
     public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
         logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + UtilityClass.getDateAsString(chosenDate) + "...");
