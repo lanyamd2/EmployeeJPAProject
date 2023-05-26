@@ -19,15 +19,13 @@ public class Utility {
     }
 
     public static String getManagerAsString(IManagerProjection manager) {
-        return "Manager{" +
-                "id=" + manager.getEmpNo() +
+        return  "id=" + manager.getEmpNo() +
                 ", birthDate=" + manager.getBirthDate() +
                 ", firstName='" + manager.getFirstName() + '\'' +
                 ", lastName='" + manager.getLastName() + '\'' +
                 ", gender='" + manager.getGender() + '\'' +
                 ", hireDate=" + manager.getHireDate() + '\'' +
                 ", fromDate=" + manager.getFromDate() + '\'' +
-                ", toDate=" + manager.getToDate() +
-                '}';
+                ", toDate=" + manager.getToDate();
     }
 }

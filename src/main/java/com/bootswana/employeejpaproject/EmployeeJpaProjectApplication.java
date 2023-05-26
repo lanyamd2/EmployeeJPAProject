@@ -40,18 +40,18 @@ public class EmployeeJpaProjectApplication {
 //		logger.log(Level.INFO, "log located in src/main/logs/logFile.log");
 
 		ctx.close();
-		System.out.println("---------------------------------------------------------");
-		System.out.println("Finished creating log, saved in src/main/logs/logFile.log");
-		System.out.println("---------------------------------------------------------");
+		System.out.println("--------------------------------------------------------------");
+		System.out.println("Execution complete, results saved in src/main/logs/logFile.log");
+		System.out.println("--------------------------------------------------------------");
 	}
 
 	@Bean
 	public CommandLineRunner runner() {
 		LogSetup.setup();
 
-		System.out.println("--------------------------------------------");
-		System.out.println("Loading CSV from src/main/resources/data.csv");
-		System.out.println("--------------------------------------------");
+		System.out.println("---------------------------------------------------");
+		System.out.println("Loading input data from src/main/resources/data.csv");
+		System.out.println("---------------------------------------------------");
 		logger.log(Level.INFO, "Last update: " + LocalDateTime.now());
 
 		Map<Integer, String[]> dataMap = CSVReader.readCSV();
