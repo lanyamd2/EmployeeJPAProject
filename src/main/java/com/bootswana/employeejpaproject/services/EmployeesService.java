@@ -19,13 +19,12 @@ public class EmployeesService {
     }
 
     public void logEmployeesByLastName(String lastName) {
-        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees with that last name.");
         } else {
-            logger.log(Level.INFO, "Employees Found:");
+            logger.log(Level.INFO, employees.size() + " Employees Found:");
             for (EmployeeDTO employee : employees) {
                 logger.log(Level.INFO, employee.toString());
             }
@@ -39,6 +38,7 @@ public class EmployeesService {
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees that meet the specified criteria.");
         } else {
+            logger.log(Level.INFO, employees.size() + " Employees Found:");
             for (EmployeeDTO employee : employees) {
                 logger.log(Level.INFO, employee.toString());
             }
