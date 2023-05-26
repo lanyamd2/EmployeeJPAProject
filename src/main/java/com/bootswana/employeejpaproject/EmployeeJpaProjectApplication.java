@@ -59,11 +59,26 @@ public class EmployeeJpaProjectApplication {
 		int year = Integer.parseInt(data[2]);
 		salariesService.logLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
 
+		//5
+		data=dataMap.get(5);
+		int fromYear= Integer.parseInt(data[1]);
+		int toYear=Integer.parseInt(data[2]);
+		departmentsService.createDepartmentSummary(fromYear,toYear);
+
 		//6
 		data = dataMap.get(6);
-		int fromYear = Integer.parseInt(data[1]);
-		int toYear = Integer.parseInt(data[2]);
+		fromYear = Integer.parseInt(data[1]);
+		toYear = Integer.parseInt(data[2]);
 		salariesService.logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+
+		//8
+		data=dataMap.get(8);
+		jobTitle=data[1];
+		fromYear=Integer.parseInt(data[2]);
+		toYear=Integer.parseInt(data[3]);
+		salariesService.findAverageSalary(jobTitle,fromYear,toYear);
+
+
 
 		//9
 		data = dataMap.get(9);
