@@ -15,7 +15,7 @@ public class Utility {
 
 
     public static String getDateAsString(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public static String getManagerAsString(IManagerProjection manager) {

@@ -47,6 +47,12 @@ public class EmployeeJpaProjectApplication {
 		String lastName = data[1];
 		employeesService.logEmployeesByLastName(lastName);
 
+		//2
+		data = dataMap.get(2);
+		String departmentName = data[1];
+		LocalDate chosenDate = LocalDate.parse(data[2], formatter);
+		employeesService.logEmployeesByDepartmentNameOnDate(departmentName, chosenDate);
+
 		//3
 		data = dataMap.get(3);
 		String department = data[1];
@@ -64,6 +70,11 @@ public class EmployeeJpaProjectApplication {
 		int fromYear = Integer.parseInt(data[1]);
 		int toYear = Integer.parseInt(data[2]);
 		salariesService.logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+
+		//7
+		data = dataMap.get(7);
+		departmentName = data[1];
+		employeesService.logManagersByDepartmentChronologically(departmentName);
 
 		//9
 		data = dataMap.get(9);
