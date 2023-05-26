@@ -13,5 +13,4 @@ import java.util.List;
 public interface DeptEmpRepository extends JpaRepository<DeptEmpDTO, DeptEmpDTOId> {
     @Query(value = "SELECT * FROM employees.dept_emp de WHERE de.from_date BETWEEN :start AND :end OR de.to_date BETWEEN :start AND :end OR(de.from_date<=:start AND de.to_date>=:end)", nativeQuery = true)
     List<DeptEmpDTO> findEmpDeptByFromDateAndToDate(LocalDate start, LocalDate end);
-
 }
