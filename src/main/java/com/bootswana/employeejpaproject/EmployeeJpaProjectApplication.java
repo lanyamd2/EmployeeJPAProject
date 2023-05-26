@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,51 +49,79 @@ public class EmployeeJpaProjectApplication {
 		employeesService.logEmployeesByLastName(lastName);
 
 		//2
-		data = dataMap.get(2);
-		String departmentName = data[1];
-		LocalDate chosenDate = LocalDate.parse(data[2], formatter);
-		employeesService.logEmployeesByDepartmentNameOnDate(departmentName, chosenDate);
+		try {
+			data = dataMap.get(2);
+			String departmentName = data[1];
+			LocalDate chosenDate = LocalDate.parse(data[2], formatter);
+			employeesService.logEmployeesByDepartmentNameOnDate(departmentName, chosenDate);
+		} catch (DateTimeParseException e) {
+			logger.log(Level.INFO, "The chosen date: " + data[2] + " in line 2 of the CSV is invalid.");
+		}
 
 		//3
-		data = dataMap.get(3);
-		String department = data[1];
-		LocalDate date = LocalDate.parse(data[2], formatter);
-		salariesService.logAverageSalaryForDepartmentOnGivenDate(department, date);
+		try {
+			data = dataMap.get(3);
+			String department = data[1];
+			LocalDate date = LocalDate.parse(data[2], formatter);
+			salariesService.logAverageSalaryForDepartmentOnGivenDate(department, date);
+		} catch (DateTimeParseException e) {
+			logger.log(Level.INFO, "The chosen date: " + data[2] + " in line 3 of the CSV is invalid.");
+		}
 
 		//4
-		data = dataMap.get(4);
-		String jobTitle = data[1];
-		int year = Integer.parseInt(data[2]);
-		salariesService.logLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+		try {
+			data = dataMap.get(4);
+			String jobTitle = data[1];
+			int year = Integer.parseInt(data[2]);
+			salariesService.logLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+		} catch (NumberFormatException e) {
+			logger.log(Level.INFO, "The chosen year: " + data[2] + " in line 4 of the CSV is invalid.");
+		}
 
 		//5
-		data=dataMap.get(5);
-		int fromYear= Integer.parseInt(data[1]);
-		int toYear=Integer.parseInt(data[2]);
-		departmentsService.createDepartmentSummary(fromYear,toYear);
+		try {
+			data=dataMap.get(5);
+			int fromYear= Integer.parseInt(data[1]);
+			int toYear=Integer.parseInt(data[2]);
+			departmentsService.createDepartmentSummary(fromYear,toYear);
+		} catch (NumberFormatException e) {
+			logger.log(Level.INFO, "A chosen year: " + data[1] + " or " + data[2] + " in line 5 of the CSV is invalid.");
+		}
 
 		//6
-		data = dataMap.get(6);
-		fromYear = Integer.parseInt(data[1]);
-		toYear = Integer.parseInt(data[2]);
-		salariesService.logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+		try {
+			data = dataMap.get(6);
+			int fromYear = Integer.parseInt(data[1]);
+			int toYear = Integer.parseInt(data[2]);
+			salariesService.logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+		} catch (NumberFormatException e) {
+			logger.log(Level.INFO, "A chosen year: " + data[1] + " or " + data[2] + " in line 6 of the CSV is invalid.");
+		}
 
 		//7
 		data = dataMap.get(7);
-		departmentName = data[1];
+		String departmentName = data[1];
 		employeesService.logManagersByDepartmentChronologically(departmentName);
 
 		//8
-		data=dataMap.get(8);
-		jobTitle=data[1];
-		fromYear=Integer.parseInt(data[2]);
-		toYear=Integer.parseInt(data[3]);
-		salariesService.findAverageSalary(jobTitle,fromYear,toYear);
+		try {
+			data=dataMap.get(8);
+			String jobTitle=data[1];
+			int fromYear=Integer.parseInt(data[2]);
+			int toYear=Integer.parseInt(data[3]);
+			salariesService.findAverageSalary(jobTitle,fromYear,toYear);
+		} catch (NumberFormatException e) {
+			logger.log(Level.INFO, "A chosen year: " + data[2] + " or " + data[3] + " in line 8 of the CSV is invalid.");
+		}
 
 		//9
-		data = dataMap.get(9);
-		int empNo = Integer.parseInt(data[1]);
-		salariesService.logFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+		try {
+			data = dataMap.get(9);
+			int empNo = Integer.parseInt(data[1]);
+			salariesService.logFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+		} catch (NumberFormatException e) {
+			logger.log(Level.INFO, "The chosen employee number: " + data[1] + " in line 9 of the CSV is invalid.");
+		}
 
 		return args -> logger.log(Level.INFO, "All methods have run");
 	}
