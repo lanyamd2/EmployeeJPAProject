@@ -1,7 +1,6 @@
 package com.bootswana.employeejpaproject;
 
 import com.bootswana.employeejpaproject.logging.LogSetup;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,15 +12,19 @@ import java.util.logging.Logger;
 @SpringBootApplication
 public class EmployeeJpaProjectApplication {
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
+	@Autowired
+	DepartmentsService departmentsService;
+
+	@Autowired
+	SalariesService salariesService;
 
 	public static void main(String[] args) {
-		LogSetup.setup();
-
 		SpringApplication.run(EmployeeJpaProjectApplication.class, args);
 	}
 
 	@Bean
 	public CommandLineRunner runner() {
-		return args -> logger.log(Level.SEVERE, "Test");
+		LogSetup.setup();
+		return args -> logger.log(Level.INFO, "All methods have run");
 	}
 }

@@ -49,8 +49,8 @@ public class DeptEmpDTO {
         this.empNo = empNo;
     }
 
-    public DepartmentDTO getDeptNo() {
-        return deptNo;
+    public String getDeptNo() {
+        return deptNo.getDeptNo();
     }
 
     public void setDeptNo(DepartmentDTO deptNo) {
