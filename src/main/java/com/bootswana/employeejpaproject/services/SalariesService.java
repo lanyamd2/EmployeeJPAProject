@@ -22,6 +22,7 @@ public class SalariesService {
     }
 
     public void logLowestAndHighestSalaryForJobTitleDuringAYear(String jobTitle, int year) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the lowest and highest salary in the year " + year + ", for a " + jobTitle + "...");
         Map<String, BigDecimal> salaryMap = salaryRepository.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
         if (salaryMap.isEmpty()) {
@@ -35,6 +36,7 @@ public class SalariesService {
     }
 
     public void logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(int fromYear, int toYear) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the percentage gender pay gap per department between the years " + fromYear + " and " + toYear + "...");
         List<Object[]> resultRows = salaryRepository.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
         if (resultRows.isEmpty()) {
@@ -56,6 +58,7 @@ public class SalariesService {
     }
 
     public void logAverageSalaryForDepartmentOnGivenDate(String department, LocalDate date) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the average salary in " + department + " on " + date + "...");
         Map<String, BigDecimal> salaryMap = salaryRepository.getAverageSalaryForDepartmentOnGivenDate(department, date);
         if (salaryMap.isEmpty()) {
@@ -67,6 +70,7 @@ public class SalariesService {
     }
 
     public void logFirstFiveSalariesOfAnEmployeeByEmployeeNumber(int empNo) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the first five salaries of employee with the employee number " + empNo + "...");
         List<Integer> salaryList = salaryRepository.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
         if (salaryList.isEmpty()) {
@@ -79,14 +83,15 @@ public class SalariesService {
         }
     }
     public double findAverageSalary(String title, int startYear, int endYear) {
+        logger.log(Level.INFO, "");
         LocalDate startDate = Utility.startYearToLocalDate(startYear);
         LocalDate endDate = Utility.endYearToLocalDate(endYear);
-        logger.log(Level.INFO, "Title selected: " + title + ", Time Period selected from: " + startDate + " to " + endDate);
+        logger.log(Level.INFO, "Finding the average salary of " + title + " between " + startDate + " and " + endDate + "...");
         List<Double> salaries = salaryRepository.findByTitleFromDateEndDate(title, startDate, endDate);
         double averageSalary = 0;
         if (!salaries.isEmpty()) {
             averageSalary = average(salaries);
-            logger.log(Level.INFO, "The average salary for " + title + " between " + startYear + " and " + endYear + " is £" + averageSalary + ".");
+            logger.log(Level.INFO, "The average salary for " + title + " between " + startYear + " and " + endYear + " is " + averageSalary + ".");
         } else {
             logger.log(Level.WARNING, "There are no employees with the title " + title + " between the years " + startYear + " and " + endYear + ".");
         }

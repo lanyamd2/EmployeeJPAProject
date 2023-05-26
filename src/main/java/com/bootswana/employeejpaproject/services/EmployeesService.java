@@ -19,6 +19,7 @@ public class EmployeesService {
     }
 
     public void logEmployeesByLastName(String lastName) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
         if(employees.size() == 0) {
@@ -32,6 +33,7 @@ public class EmployeesService {
     }
 
     public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + Utility.getDateAsString(chosenDate) + "...");
         List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate(departmentName,chosenDate);
         if(employees.size() == 0) {
@@ -44,6 +46,7 @@ public class EmployeesService {
     }
 
     public void logManagersByDepartmentChronologically(String departmentName) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding managers for the " + departmentName + " department in chronological order...");
         List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically(departmentName);
         if(managersAndDates.size() == 0) {

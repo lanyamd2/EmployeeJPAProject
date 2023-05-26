@@ -33,9 +33,10 @@ public class DepartmentsService {
     }
 
     public HashMap<String, Integer> createDepartmentSummary(int startYear, int endYear) {
+        logger.log(Level.INFO, "");
         LocalDate startDate = Utility.startYearToLocalDate(startYear);
         LocalDate endDate = Utility.endYearToLocalDate(endYear);
-        logger.log(Level.INFO, "Time Period selected from: " + startDate + " to " + endDate);
+        logger.log(Level.INFO, "Finding the number of employees in each department between " + startDate + " and " + endDate + "...");
         List<DeptEmpDTO> employeesFromStartToEnd = deptEmpRepository.findEmpDeptByFromDateAndToDate(startDate, endDate);
         HashMap<String, Integer> deptMap = new HashMap<>();
         if (!employeesFromStartToEnd.isEmpty()) {
