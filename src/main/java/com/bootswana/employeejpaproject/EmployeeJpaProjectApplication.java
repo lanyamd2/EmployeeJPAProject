@@ -35,9 +35,7 @@ public class EmployeeJpaProjectApplication {
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
 
 	public static void main(String[] args) {
-//		logger.log(Level.INFO, "CSV located in src/main/resources/data.csv");
 		ConfigurableApplicationContext ctx = SpringApplication.run(EmployeeJpaProjectApplication.class, args);
-//		logger.log(Level.INFO, "log located in src/main/logs/logFile.log");
 
 		ctx.close();
 		System.out.println("--------------------------------------------------------------");
