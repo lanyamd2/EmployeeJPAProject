@@ -19,6 +19,7 @@ public class EmployeesService {
     }
 
     public void logEmployeesByLastName(String lastName) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
         if(employees.size() == 0) {

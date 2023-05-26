@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -33,12 +35,24 @@ public class EmployeeJpaProjectApplication {
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
 
 	public static void main(String[] args) {
-		SpringApplication.run(EmployeeJpaProjectApplication.class, args);
+//		logger.log(Level.INFO, "CSV located in src/main/resources/data.csv");
+		ConfigurableApplicationContext ctx = SpringApplication.run(EmployeeJpaProjectApplication.class, args);
+//		logger.log(Level.INFO, "log located in src/main/logs/logFile.log");
+
+		ctx.close();
+		System.out.println("---------------------------------------------------------");
+		System.out.println("Finished creating log, saved in src/main/logs/logFile.log");
+		System.out.println("---------------------------------------------------------");
 	}
 
 	@Bean
 	public CommandLineRunner runner() {
 		LogSetup.setup();
+
+		System.out.println("--------------------------------------------");
+		System.out.println("Loading CSV from src/main/resources/data.csv");
+		System.out.println("--------------------------------------------");
+		logger.log(Level.INFO, "Last update: " + LocalDateTime.now());
 
 		Map<Integer, String[]> dataMap = CSVReader.readCSV();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -123,6 +137,7 @@ public class EmployeeJpaProjectApplication {
 			logger.log(Level.INFO, "The chosen employee number: " + data[1] + " in line 9 of the CSV is invalid.");
 		}
 
+		LogSetup.close();
 		return args -> logger.log(Level.INFO, "All methods have run");
 	}
 }
