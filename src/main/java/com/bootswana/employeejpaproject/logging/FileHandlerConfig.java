@@ -9,7 +9,7 @@ public class FileHandlerConfig {
     public static FileHandler getFileHandler() {
         if(fileHandler == null) {
             try {
-                fileHandler = new FileHandler("src/main/java/com/bootswana/employeejpaproject/logs/logFile.log", false);
+                fileHandler = new FileHandler("src/main/logs/logFile.log", false);
                 fileHandler.setLevel(Level.ALL);
                 fileHandler.setFormatter(new SimpleFormatter());
             } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.bootswana.employeejpaproject;
 
 import com.bootswana.employeejpaproject.logging.LogSetup;
 import com.bootswana.employeejpaproject.services.DepartmentsService;
+import com.bootswana.employeejpaproject.services.EmployeesService;
 import com.bootswana.employeejpaproject.services.SalariesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,9 @@ public class EmployeeJpaProjectApplication {
 	SalariesService salariesService;
 
 	@Autowired
+	EmployeesService employeesService;
+
+	@Autowired
 	DepartmentsService departmentsService;
 
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
@@ -36,11 +40,16 @@ public class EmployeeJpaProjectApplication {
 		LogSetup.setup();
 
 		Map<Integer, String[]> dataMap = CSVReader.readCSV();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		//1
+		String[] data = dataMap.get(1);
+		String lastName = data[1];
+		employeesService.logEmployeesByLastName(lastName);
 
 		//3
-		String[] data = dataMap.get(3);
+		data = dataMap.get(3);
 		String department = data[1];
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDate date = LocalDate.parse(data[2], formatter);
 		salariesService.logAverageSalaryForDepartmentOnGivenDate(department, date);
 
