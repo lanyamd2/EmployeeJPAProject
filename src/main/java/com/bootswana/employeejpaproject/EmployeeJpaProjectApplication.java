@@ -1,5 +1,7 @@
 package com.bootswana.employeejpaproject;
 
+import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
+import com.bootswana.employeejpaproject.services.EmployeesService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +14,6 @@ import java.util.logging.Logger;
 
 @SpringBootApplication
 public class EmployeeJpaProjectApplication {
-
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
 
 	public static void main(String[] args) {

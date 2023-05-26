@@ -2,6 +2,7 @@ package com.bootswana.employeejpaproject.model.repositories;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
+import com.bootswana.employeejpaproject.services.EmployeesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,15 +59,6 @@ class EmployeeRepositoryTests {
     void checkForManagersByDepartmentName() {
         List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically("Customer Service");
         Assertions.assertTrue(managersAndDates.size() >= 1);
-
-        for (IManagerProjection managerAndDates : managersAndDates) {
-            LocalDate fromDate = managerAndDates.getFromDate();
-            LocalDate toDate = managerAndDates.getToDate();
-            System.out.println(managerAndDates.getEmpNo() + " From: " + fromDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " To: " + toDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            System.out.println(managerAndDates.getBirthDate());
-
-        }
-
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.bootswana.employeejpaproject.services;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class EmployeesService {
     public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
         logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + UtilityClass.getDateAsString(chosenDate) + "...");
         List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate(departmentName,chosenDate);
-        if(employees == null) {
+        if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees that meet the specified criteria.");
         } else {
             for (EmployeeDTO employee : employees) {
@@ -44,7 +45,15 @@ public class EmployeesService {
         }
     }
 
-//    public void logManagersByDepartmentChronologically(String departmentName) {
-//        logger.log(Level.INFO, "Finding managers that have ");
-//    }
+    public void logManagersByDepartmentChronologically(String departmentName) {
+        logger.log(Level.INFO, "Finding managers for the " + departmentName + " department in chronological order...");
+        List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically(departmentName);
+        if(managersAndDates.size() == 0) {
+            logger.log(Level.INFO,"There are no managers that meet the specified criteria.");
+        } else {
+            for(IManagerProjection managerAndDates : managersAndDates) {
+                logger.log(Level.INFO, UtilityClass.getManagerAsString(managerAndDates));
+            }
+        }
+    }
 }
