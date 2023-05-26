@@ -6,9 +6,7 @@ import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +32,7 @@ public class EmployeesService {
     }
 
     public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
-        logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + UtilityClass.getDateAsString(chosenDate) + "...");
+        logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + Utility.getDateAsString(chosenDate) + "...");
         List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate(departmentName,chosenDate);
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees that meet the specified criteria.");
@@ -52,7 +50,7 @@ public class EmployeesService {
             logger.log(Level.INFO,"There are no managers that meet the specified criteria.");
         } else {
             for(IManagerProjection managerAndDates : managersAndDates) {
-                logger.log(Level.INFO, UtilityClass.getManagerAsString(managerAndDates));
+                logger.log(Level.INFO, Utility.getManagerAsString(managerAndDates));
             }
         }
     }
