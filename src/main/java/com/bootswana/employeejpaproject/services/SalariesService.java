@@ -5,6 +5,7 @@ import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -61,4 +62,34 @@ public class SalariesService {
             logger.log(Level.INFO, String.valueOf(salary));
         }
     }
+    public double findAverageSalary(String title, int startYear, int endYear) {
+        LocalDate startDate = Utility.startYearToLocalDate(startYear);
+        LocalDate endDate = Utility.endYearToLocalDate(endYear);
+        logger.log(Level.INFO, "Title selected: " + title + ", Time Period selected from: " + startDate + " to " + endDate);
+        List<Double> salaries = salaryRepository.findByTitleFromDateEndDate(title, startDate, endDate);
+        double averageSalary = 0;
+        if (!salaries.isEmpty()) {
+            averageSalary = average(salaries);
+            logger.log(Level.INFO, "The average salary for " + title + " between " + startYear + " and " + endYear + " is £" + averageSalary + ".");
+        } else {
+            logger.log(Level.WARNING, "There are no employees with the title " + title + " between the years " + startYear + " and " + endYear + ".");
+        }
+
+        return averageSalary;
+    }
+
+    public static double round(double value) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(2, RoundingMode.DOWN);
+        return bd.doubleValue();
+    }
+
+    public static double average(List<Double> salaries) {
+        double sum = 0;
+        for (Double salary : salaries) {
+            sum += salary;
+        }
+        return round(sum / salaries.size());
+    }
+
 }

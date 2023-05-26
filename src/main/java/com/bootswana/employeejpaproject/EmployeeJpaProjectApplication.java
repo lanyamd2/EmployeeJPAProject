@@ -1,6 +1,9 @@
 package com.bootswana.employeejpaproject;
 
 import com.bootswana.employeejpaproject.logging.LogSetup;
+import com.bootswana.employeejpaproject.services.DepartmentsService;
+import com.bootswana.employeejpaproject.services.SalariesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,15 +18,22 @@ import java.util.logging.Logger;
 public class EmployeeJpaProjectApplication {
 
     static Logger logger = Logger.getLogger(EmployeeJpaProjectApplication.class.getName());
+	@Autowired
+	DepartmentsService departmentsService;
+
+	@Autowired
+	SalariesService salariesService;
 
 	public static void main(String[] args) {
-		LogSetup.setup();
-
 		SpringApplication.run(EmployeeJpaProjectApplication.class, args);
 	}
 
 	@Bean
 	public CommandLineRunner runner() {
-		return args -> logger.log(Level.SEVERE, "Test");
+		LogSetup.setup();
+
+		departmentsService.createDepartmentSummary(1986,1987);//5
+		salariesService.findAverageSalary("Engineer",1986,1987);//8
+		return args -> logger.log(Level.INFO, "All methods have run");
 	}
 }

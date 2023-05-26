@@ -25,4 +25,6 @@ public interface SalaryRepository extends JpaRepository<SalaryDTO, SalaryDTOId> 
     @Query(value = "SELECT salary FROM employees.salaries WHERE emp_no = :empNo ORDER BY from_date LIMIT 5", nativeQuery = true)
     List<Integer> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(int empNo);
 
+    @Query(value="SELECT s.salary FROM employees.salaries s JOIN employees.titles t ON s.emp_no = t.emp_no WHERE t.title=:title AND (s.from_date BETWEEN :start AND :end OR s.to_date BETWEEN :start AND :end OR (s.from_date<=:start AND s.to_date>=:end))",nativeQuery = true)
+    List<Double> findByTitleFromDateEndDate(String title, LocalDate start, LocalDate end);
 }
