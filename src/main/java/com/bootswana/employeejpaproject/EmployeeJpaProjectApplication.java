@@ -1,9 +1,9 @@
 package com.bootswana.employeejpaproject;
 
 import com.bootswana.employeejpaproject.logging.LogSetup;
-import com.bootswana.employeejpaproject.services.DepartmentsService;
-import com.bootswana.employeejpaproject.services.EmployeesService;
-import com.bootswana.employeejpaproject.services.SalariesService;
+import com.bootswana.employeejpaproject.service.DepartmentsService;
+import com.bootswana.employeejpaproject.service.EmployeesService;
+import com.bootswana.employeejpaproject.service.SalariesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

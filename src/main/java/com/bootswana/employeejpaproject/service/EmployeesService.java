@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.services;
+package com.bootswana.employeejpaproject.service;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
