@@ -20,7 +20,7 @@ public class SalariesService {
         this.salaryRepository = salaryRepository;
     }
 
-    public void logLowestAndHighestSalaryForJobTitleDuringAYear(String jobTitle, int year) {
+    public Map<String, BigDecimal> getLowestAndHighestSalaryForJobTitleDuringAYear(String jobTitle, int year) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the lowest and highest salary in the year " + year + ", for a " + jobTitle + "...");
         Map<String, BigDecimal> salaryMap = salaryRepository.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
@@ -32,9 +32,10 @@ public class SalariesService {
             logger.log(Level.INFO, "Lowest Salary: " + lowestAmountPaid);
             logger.log(Level.INFO, "Highest Salary: " + highestAmountPaid);
         }
+        return salaryMap;
     }
 
-    public void logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(int fromYear, int toYear) {
+    public List<Object[]> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(int fromYear, int toYear) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the percentage gender pay gap per department between the years " + fromYear + " and " + toYear + "...");
         List<Object[]> resultRows = salaryRepository.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
@@ -54,9 +55,10 @@ public class SalariesService {
                 }
             }
         }
+        return resultRows;
     }
 
-    public void logAverageSalaryForDepartmentOnGivenDate(String department, LocalDate date) {
+    public Map<String, BigDecimal> getAverageSalaryForDepartmentOnGivenDate(String department, LocalDate date) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the average salary in " + department + " on " + date + "...");
         Map<String, BigDecimal> salaryMap = salaryRepository.getAverageSalaryForDepartmentOnGivenDate(department, date);
@@ -66,9 +68,10 @@ public class SalariesService {
             BigDecimal averageSalary = salaryMap.get("average_salary");
             logger.log(Level.INFO, "Average Salary: " + averageSalary);
         }
+        return salaryMap;
     }
 
-    public void logFirstFiveSalariesOfAnEmployeeByEmployeeNumber(int empNo) {
+    public List<Integer> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(int empNo) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding the first five salaries of employee with the employee number " + empNo + "...");
         List<Integer> salaryList = salaryRepository.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
@@ -80,6 +83,7 @@ public class SalariesService {
                 logger.log(Level.INFO, String.valueOf(salary));
             }
         }
+        return salaryList;
     }
     public double findAverageSalary(String title, int startYear, int endYear) {
         logger.log(Level.INFO, "");

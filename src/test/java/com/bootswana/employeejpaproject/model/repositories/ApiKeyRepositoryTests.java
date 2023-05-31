@@ -41,5 +41,4 @@ public class ApiKeyRepositoryTests {
 
         Assertions.assertEquals("ApiKeyDTO{apiKey='generated123', accessLevel=3}", result);
     }
-
 }

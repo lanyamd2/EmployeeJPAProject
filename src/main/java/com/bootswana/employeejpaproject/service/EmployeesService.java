@@ -18,7 +18,7 @@ public class EmployeesService {
         this.employeeRepository = employeeRepository;
     }
 
-    public void logEmployeesByLastName(String lastName) {
+    public List<EmployeeDTO> getEmployeesByLastName(String lastName) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
@@ -30,9 +30,10 @@ public class EmployeesService {
                 logger.log(Level.INFO, employee.toString());
             }
         }
+        return employees;
     }
 
-    public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
+    public List<EmployeeDTO> getEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + Utility.getDateAsString(chosenDate) + "...");
         List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate(departmentName,chosenDate);
@@ -44,9 +45,10 @@ public class EmployeesService {
                 logger.log(Level.INFO, employee.toString());
             }
         }
+        return employees;
     }
 
-    public void logManagersByDepartmentChronologically(String departmentName) {
+    public List<IManagerProjection> getManagersByDepartmentChronologically(String departmentName) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding managers for the " + departmentName + " department in chronological order...");
         List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically(departmentName);
@@ -57,5 +59,6 @@ public class EmployeesService {
                 logger.log(Level.INFO, Utility.getManagerAsString(managerAndDates));
             }
         }
+        return managersAndDates;
     }
 }
