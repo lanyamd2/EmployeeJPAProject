@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.services;
+package com.bootswana.employeejpaproject.service;
 import com.bootswana.employeejpaproject.model.dtos.DeptEmpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,16 +8,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
-import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
 import com.bootswana.employeejpaproject.model.repositories.DeptEmpRepository;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -33,9 +27,10 @@ public class DepartmentsService {
     }
 
     public HashMap<String, Integer> createDepartmentSummary(int startYear, int endYear) {
+        logger.log(Level.INFO, "");
         LocalDate startDate = Utility.startYearToLocalDate(startYear);
         LocalDate endDate = Utility.endYearToLocalDate(endYear);
-        logger.log(Level.INFO, "Time Period selected from: " + startDate + " to " + endDate);
+        logger.log(Level.INFO, "Finding the number of employees in each department between " + startDate + " and " + endDate + "...");
         List<DeptEmpDTO> employeesFromStartToEnd = deptEmpRepository.findEmpDeptByFromDateAndToDate(startDate, endDate);
         HashMap<String, Integer> deptMap = new HashMap<>();
         if (!employeesFromStartToEnd.isEmpty()) {
@@ -43,7 +38,10 @@ public class DepartmentsService {
             map.forEach(
                     (key, value) -> deptMap.put(departmentRepository.findById(key).get().getDeptName(), value)
             );
-            logger.log(Level.INFO, deptMap.toString());
+            deptMap.forEach(
+                    (key, value) -> logger.log(Level.INFO, value + " employees in " + key)
+            );
+//            logger.log(Level.INFO, deptMap.toString());
         } else {
             String message = "There are no employees in any department between " + startYear + " and " + endYear + ".";
             logger.log(Level.WARNING, message);

@@ -1,6 +1,5 @@
 package com.bootswana.employeejpaproject.model.repositories;
 
-import com.bootswana.employeejpaproject.services.SalariesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,6 @@ package com.bootswana.employeejpaproject.model.repositories;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
-import com.bootswana.employeejpaproject.services.EmployeesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @SpringBootTest

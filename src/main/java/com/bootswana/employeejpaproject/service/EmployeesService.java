@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.services;
+package com.bootswana.employeejpaproject.service;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
@@ -6,9 +6,7 @@ import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,40 +18,47 @@ public class EmployeesService {
         this.employeeRepository = employeeRepository;
     }
 
-    public void logEmployeesByLastName(String lastName) {
+    public List<EmployeeDTO> getEmployeesByLastName(String lastName) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees with that last name.");
         } else {
-            logger.log(Level.INFO, "Employees Found:");
+            logger.log(Level.INFO, employees.size() + " Employees Found:");
             for (EmployeeDTO employee : employees) {
                 logger.log(Level.INFO, employee.toString());
             }
         }
+        return employees;
     }
 
-    public void logEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
-        logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + UtilityClass.getDateAsString(chosenDate) + "...");
+    public List<EmployeeDTO> getEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {
+        logger.log(Level.INFO, "");
+        logger.log(Level.INFO, "Finding employees that have worked in the " + departmentName + " department on " + Utility.getDateAsString(chosenDate) + "...");
         List<EmployeeDTO> employees = employeeRepository.findEmployeesByDepartmentNameOnDate(departmentName,chosenDate);
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees that meet the specified criteria.");
         } else {
+            logger.log(Level.INFO, employees.size() + " Employees Found:");
             for (EmployeeDTO employee : employees) {
                 logger.log(Level.INFO, employee.toString());
             }
         }
+        return employees;
     }
 
-    public void logManagersByDepartmentChronologically(String departmentName) {
+    public List<IManagerProjection> getManagersByDepartmentChronologically(String departmentName) {
+        logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding managers for the " + departmentName + " department in chronological order...");
         List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically(departmentName);
         if(managersAndDates.size() == 0) {
             logger.log(Level.INFO,"There are no managers that meet the specified criteria.");
         } else {
             for(IManagerProjection managerAndDates : managersAndDates) {
-                logger.log(Level.INFO, UtilityClass.getManagerAsString(managerAndDates));
+                logger.log(Level.INFO, Utility.getManagerAsString(managerAndDates));
             }
         }
+        return managersAndDates;
     }
 }

@@ -142,13 +142,11 @@ public class EmployeeDTO {
 
     @Override
     public String toString() {
-        return "EmployeeDTO{" +
-                "id=" + id +
+        return  "id=" + id +
                 ", birthDate=" + birthDate +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
-                ", hireDate=" + hireDate +
-                '}';
+                ", hireDate=" + hireDate;
     }
 }

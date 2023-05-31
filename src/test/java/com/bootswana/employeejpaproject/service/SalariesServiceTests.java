@@ -1,4 +1,4 @@
-package com.bootswana.employeejpaproject.services;
+package com.bootswana.employeejpaproject.service;
 
 import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import org.junit.jupiter.api.Assertions;

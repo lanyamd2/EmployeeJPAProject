@@ -4,20 +4,35 @@
 
 1. [About](#about)  
 2. [General Requirements](#general-requirements)
-3. [Project Requirements](#project-requirements)
-4. [Contributing](#contributing)
+3. [Project Requirements Part 1](#project-requirements-part-1)
+4. [Project Requirements Part 2](#project-requirements-part-2)
+5. [Contributing](#contributing)
 
 
 ## About
+
+### Part 1
 
 Developed by team Bootswana.
 
 The application searches for requested data from a MySQL database and presents it to the user.
 
-Purpose of project:
+Purpose:
 - Explore JPA/Hibernate
 - Use Spring Boot Testing
 - Implement DAO and DTO classes as appropriate
+
+### Part 2
+
+Developed by POSTman PATCH's van crew.
+
+Expands on part 1 to allow the user to access the database through an API.
+
+Purpose:
+- Explore the concepts of REST by implementing a service
+- Implement multiple mapping types and parameter handling approaches
+- Implement authentication for APIs
+- Integrate a JPA/Hibernate back-end with a Spring REST API
 
 
 ## General Requirements
@@ -35,7 +50,7 @@ All projects:
 - Must be hosted on GitHub and thoroughly documented, through a `README.md` file
 
 
-## Project Requirements
+## Project Requirements Part 1
 
 - Develop JPA entities and repositories for all 6 tables in the employees sample database in MySQL:
   - `departments`
@@ -57,6 +72,20 @@ All projects:
 - Use Spring Boot Test to create a comprehensive suite for your JPA classes and your DAO/DTO classes
 - Include the result of your testing in the ```README.md``` file for the project on GitHub
 - Include code coverage data for all JPA classes, with explanations for any low coverage levels, in the `README.md`
+
+
+
+## Project Requirements Part 2
+
+- Create an API to access the JPA entities created for the employees database in week 5
+- Provide basic CRUD access for all relevant tables via the API
+- Provide further CRUD access for the additional analytical methods
+- Implement appropriate error handling and reporting, including logging
+- Implement the generation of API keys for users and allow multiple levels of user based on the API key (this will involve the creation of additional database resources to store the keys and access levels and a distribution mechanism)
+  - Basic user (read-only access)
+  - Update user (CRU access)
+  - Admin user (full CRUD)
+- Include testing using Jackson/JUnit, Postman and Spring Boot Test as appropriate
 
 
 ## Contributing
