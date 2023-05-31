@@ -17,6 +17,15 @@ public class ApiKeyDTO {
     @Column(name = "access_level")
     private Integer accessLevel;
 
+
+    public ApiKeyDTO(String apiKey, Integer accessLevel) {
+        this.apiKey = apiKey;
+        this.accessLevel = accessLevel;
+    }
+
+    public ApiKeyDTO() {
+    }
+
     public String getApiKey() {
         return apiKey;
     }

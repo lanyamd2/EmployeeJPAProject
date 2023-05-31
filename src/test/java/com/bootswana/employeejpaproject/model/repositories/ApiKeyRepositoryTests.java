@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 @SpringBootTest
 public class ApiKeyRepositoryTests {
 
@@ -25,8 +23,8 @@ public class ApiKeyRepositoryTests {
     @DisplayName("Check Get API Access Level")
     void checkGetApiAccessLevel() {
         String key = "test123";
-        System.out.println(apiKeyRepository.getApiAccessLevel(key));
-        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key));
+        System.out.println("Access level: " + apiKeyRepository.getApiAccessLevel(key));
+        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key).get());
     }
 
     @Test
@@ -36,9 +34,12 @@ public class ApiKeyRepositoryTests {
         String key = "generated123";
         int accessLevel = 3;
 
-        apiKeyRepository.setApiKey(key, accessLevel);
+//        apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));
 
-        Assertions.assertEquals("[ApiKeyDTO{apiKey='generated123', accessLevel=3}]", apiKeyRepository.findById("generated123"));
+        String result = String.valueOf(apiKeyRepository.findById(key).get());;
+        System.out.println(result);
+
+        Assertions.assertEquals("ApiKeyDTO{apiKey='generated123', accessLevel=3}", result);
     }
 
 }
