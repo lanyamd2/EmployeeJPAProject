@@ -60,14 +60,14 @@ public class EmployeeJpaProjectApplication {
 		//1
 		String[] data = dataMap.get(1);
 		String lastName = data[1];
-		employeesService.logEmployeesByLastName(lastName);
+		employeesService.getEmployeesByLastName(lastName);
 
 		//2
 		try {
 			data = dataMap.get(2);
 			String departmentName = data[1];
 			LocalDate chosenDate = LocalDate.parse(data[2], formatter);
-			employeesService.logEmployeesByDepartmentNameOnDate(departmentName, chosenDate);
+			employeesService.getEmployeesByDepartmentNameOnDate(departmentName, chosenDate);
 		} catch (DateTimeParseException e) {
 			logger.log(Level.INFO, "The chosen date: " + data[2] + " in line 2 of the CSV is invalid.");
 		}
@@ -77,7 +77,7 @@ public class EmployeeJpaProjectApplication {
 			data = dataMap.get(3);
 			String department = data[1];
 			LocalDate date = LocalDate.parse(data[2], formatter);
-			salariesService.logAverageSalaryForDepartmentOnGivenDate(department, date);
+			salariesService.getAverageSalaryForDepartmentOnGivenDate(department, date);
 		} catch (DateTimeParseException e) {
 			logger.log(Level.INFO, "The chosen date: " + data[2] + " in line 3 of the CSV is invalid.");
 		}
@@ -87,7 +87,7 @@ public class EmployeeJpaProjectApplication {
 			data = dataMap.get(4);
 			String jobTitle = data[1];
 			int year = Integer.parseInt(data[2]);
-			salariesService.logLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+			salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
 		} catch (NumberFormatException e) {
 			logger.log(Level.INFO, "The chosen year: " + data[2] + " in line 4 of the CSV is invalid.");
 		}
@@ -107,7 +107,7 @@ public class EmployeeJpaProjectApplication {
 			data = dataMap.get(6);
 			int fromYear = Integer.parseInt(data[1]);
 			int toYear = Integer.parseInt(data[2]);
-			salariesService.logGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+			salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
 		} catch (NumberFormatException e) {
 			logger.log(Level.INFO, "A chosen year: " + data[1] + " or " + data[2] + " in line 6 of the CSV is invalid.");
 		}
@@ -115,7 +115,7 @@ public class EmployeeJpaProjectApplication {
 		//7
 		data = dataMap.get(7);
 		String departmentName = data[1];
-		employeesService.logManagersByDepartmentChronologically(departmentName);
+		employeesService.getManagersByDepartmentChronologically(departmentName);
 
 		//8
 		try {
@@ -132,7 +132,7 @@ public class EmployeeJpaProjectApplication {
 		try {
 			data = dataMap.get(9);
 			int empNo = Integer.parseInt(data[1]);
-			salariesService.logFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+			salariesService.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
 		} catch (NumberFormatException e) {
 			logger.log(Level.INFO, "The chosen employee number: " + data[1] + " in line 9 of the CSV is invalid.");
 		}
