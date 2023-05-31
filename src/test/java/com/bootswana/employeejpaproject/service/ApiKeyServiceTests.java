@@ -13,6 +13,6 @@ public class ApiKeyServiceTests {
     @Test
     @DisplayName("Check for ")
     void checkFor(){
-        System.out.println(apiKeyService.getAccessLevel(null));
+        System.out.println(apiKeyService.getAccessLevel("1234567890"));
     }
 }

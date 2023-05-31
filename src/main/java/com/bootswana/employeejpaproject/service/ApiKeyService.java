@@ -22,12 +22,12 @@ public class ApiKeyService {
     }
 
     public int getAccessLevel(String clientKey) {
-        if (clientKey == null) {
-            logger.log(Level.WARNING, "The client has not entered an API key");
-            return 10;//throw client key not found
-        } else {
-            Optional<Integer> level = apiKeyRepository.getApiAccessLevel(clientKey);
+        try{
+            Integer level = apiKeyRepository.getApiAccessLevel(clientKey);
+            return level;
+        }catch(NullPointerException e){
+            logger.log(Level.WARNING, "API key not found");
+            return 0;
         }
-        return 0;
     }
 }
