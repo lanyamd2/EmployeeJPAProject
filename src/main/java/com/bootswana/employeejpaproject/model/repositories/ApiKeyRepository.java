@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApiKeyRepository extends JpaRepository<ApiKeyDTO, String> {
 
@@ -13,7 +14,7 @@ public interface ApiKeyRepository extends JpaRepository<ApiKeyDTO, String> {
     List<ApiKeyDTO> getAllApiKeys();
 
     @Query(value = "SELECT k.access_level FROM employees.api_keys k WHERE k.api_key = :apiKey", nativeQuery = true)
-    Integer getApiAccessLevel(String apiKey);
+    Optional<Integer> getApiAccessLevel(String apiKey);
 
 
 //    @Modifying
