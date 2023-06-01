@@ -20,24 +20,17 @@ public class ApiKeyService {
     }
 
     public int getAccessLevel(String clientKey) {
-        if (clientKey == null) {
-            logger.log(Level.WARNING, "The client has not entered an API key");
-            return 10;//throw client key not found
-        } else {
-            Optional<Integer> level = apiKeyRepository.getApiAccessLevel(clientKey);
-            if (level.isPresent()) {
-                return level.get();
-            }
-            else {
-                logger.log(Level.WARNING, "Access key not found");
-                return 20;
-            }
+        try{
+            Integer level = apiKeyRepository.getApiAccessLevel(clientKey);
+            return level;
+        }catch(NullPointerException e){
+            logger.log(Level.WARNING, "API key not found");
+            return 0;
         }
     }
 
     public int generateApiKey(int accessLevel) {
         if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
-
             String key = Utility.generateKey();
 
             apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));

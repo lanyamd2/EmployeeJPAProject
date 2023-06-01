@@ -13,6 +13,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKeyDTO, String> {
     List<ApiKeyDTO> getAllApiKeys();
 
     @Query(value = "SELECT k.access_level FROM employees.api_keys k WHERE k.api_key = :apiKey", nativeQuery = true)
-    Optional<Integer> getApiAccessLevel(String apiKey);
+    Integer getApiAccessLevel(String apiKey);
 
 }

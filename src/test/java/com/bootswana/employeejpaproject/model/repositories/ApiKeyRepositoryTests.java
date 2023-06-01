@@ -27,7 +27,7 @@ public class ApiKeyRepositoryTests {
     void checkGetApiAccessLevel() {
         String key = "test123";
         System.out.println("Access level: " + apiKeyRepository.getApiAccessLevel(key));
-        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key).get());
+        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key));
     }
 
     @Test
