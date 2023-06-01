@@ -90,7 +90,7 @@ public class SalariesService {
             return Optional.of(salaryList);
         }
     }
-    public Optional<Object> findAverageSalary(String title, int startYear, int endYear) {
+    public double findAverageSalary(String title, int startYear, int endYear) {
         logger.log(Level.INFO, "");
         LocalDate startDate = Utility.startYearToLocalDate(startYear);
         LocalDate endDate = Utility.endYearToLocalDate(endYear);
@@ -100,11 +100,10 @@ public class SalariesService {
         if (!salaries.isEmpty()) {
             averageSalary = average(salaries);
             logger.log(Level.INFO, "The average salary for " + title + " between " + startYear + " and " + endYear + " is " + averageSalary + ".");
-            return Optional.of(averageSalary);
         } else {
             logger.log(Level.WARNING, "There are no employees with the title " + title + " between the years " + startYear + " and " + endYear + ".");
-            return Optional.empty();
         }
+        return averageSalary;
     }
 
     public static double round(double value) {
