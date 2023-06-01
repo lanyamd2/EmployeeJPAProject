@@ -28,27 +28,27 @@ public class ApiKeyService {
         }
     }
 
-    public int generateApiKey(int accessLevel) {
+    public String generateApiKey(int accessLevel) {
         if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
             String key = Utility.generateKey();
 
             if (!isApiKeyExisting(key)) {
                 apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));
                 logger.log(Level.WARNING, "-------------------------------------------------------------------------");
-                logger.log(Level.WARNING, "Access level: " + accessLevel + ", Key generated: " + key);
-                logger.log(Level.WARNING, "Please save this key, as it will not be displayed again.");
-                logger.log(Level.WARNING, "-------------------------------------------------------------------------");
+                logger.log(Level.WARNING, "New key generated with access level: " + accessLevel);
+                return "Access level: " + accessLevel +
+                        "<br>Key generated: " + key +
+                        "<br><br>Please save this key, as it will not be displayed again.";
             }
             else {
                 logger.log(Level.WARNING, "Error generating key, please try again");
-                return 0;
+                return "Error generating key, please try again";
             }
 
         } else {
             logger.log(Level.WARNING, "The client has not entered a correct API access level");
-            return 0;//throw client access level not found
+            return "The client has not entered a correct API access level";//throw client access level not found
         }
-        return 0;
     }
 
     public Boolean isApiKeyExisting(String apiKey) {
