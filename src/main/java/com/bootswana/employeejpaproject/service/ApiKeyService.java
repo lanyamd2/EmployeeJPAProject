@@ -40,8 +40,7 @@ public class ApiKeyService {
             logger.log(Level.WARNING, "-------------------------------------------------------------------------");
         } else {
             logger.log(Level.WARNING, "The client has not entered a correct API access level");
-            return 10;//throw client access level not found
+            return 0;//throw client access level not found
         }
-        return 0;
     }
 }
