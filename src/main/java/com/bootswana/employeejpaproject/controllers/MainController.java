@@ -4,6 +4,7 @@ import com.bootswana.employeejpaproject.EmployeeJpaProjectApplication;
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
+import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import com.bootswana.employeejpaproject.service.EmployeesService;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -35,12 +38,17 @@ public class MainController {
     private ApiKeyService apiKeyService;
 
     @Autowired
-    public MainController(EmployeeRepository employeeRepository, EmployeesService employeesService, DepartmentsService departmentsService, SalariesService salariesService, ApiKeyService apiKeyService) {
+    public MainController(ApiKeyService apiKeyService, EmployeeRepository employeeRepository, EmployeesService employeesService, DepartmentsService departmentsService, SalariesService salariesService) {
+        this.apiKeyService = apiKeyService;
         this.employeeRepository = employeeRepository;
         this.employeesService = employeesService;
         this.departmentsService = departmentsService;
         this.salariesService = salariesService;
-        this.apiKeyService=apiKeyService;
+    }
+  
+    @GetMapping("/api/generate/{id}")
+    public String generateApiKey(@PathVariable Integer id) {
+        return apiKeyService.generateApiKey(id);
     }
 
     @GetMapping("/employee")//api key to be implemented, also try catch for MethodArgumentMismatch
@@ -54,5 +62,6 @@ public class MainController {
             logger.log(Level.INFO, "Employee " + id + " not found");
             return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
         }
-    }
+      
+
 }
