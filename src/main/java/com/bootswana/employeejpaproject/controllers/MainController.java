@@ -1,10 +1,13 @@
 package com.bootswana.employeejpaproject.controllers;
 
-import com.bootswana.employeejpaproject.EmployeeJpaProjectApplication;
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
+import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
+import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
+import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
-import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
+import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import com.bootswana.employeejpaproject.service.EmployeesService;
@@ -15,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,18 +38,22 @@ public class MainController {
     static Logger logger = Logger.getLogger(MainController.class.getName());
 
     //services
+    private ApiKeyService apiKeyService;
     private EmployeeRepository employeeRepository;
     private EmployeesService employeesService;
+    private DepartmentRepository departmentRepository;
     private DepartmentsService departmentsService;
+    private SalaryRepository salaryRepository;
     private SalariesService salariesService;
-    private ApiKeyService apiKeyService;
 
     @Autowired
-    public MainController(ApiKeyService apiKeyService, EmployeeRepository employeeRepository, EmployeesService employeesService, DepartmentsService departmentsService, SalariesService salariesService) {
+    public MainController(ApiKeyService apiKeyService, EmployeeRepository employeeRepository, EmployeesService employeesService, DepartmentRepository departmentRepository, DepartmentsService departmentsService, SalaryRepository salaryRepository, SalariesService salariesService) {
         this.apiKeyService = apiKeyService;
         this.employeeRepository = employeeRepository;
         this.employeesService = employeesService;
+        this.departmentRepository = departmentRepository;
         this.departmentsService = departmentsService;
+        this.salaryRepository = salaryRepository;
         this.salariesService = salariesService;
     }
 
@@ -54,7 +61,6 @@ public class MainController {
     public String generateApiKey(@PathVariable Integer id) {
         return apiKeyService.generateApiKey(id);
     }
-
     @GetMapping("/employee")
     public ResponseEntity<?> getEmployeeById(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -67,7 +73,6 @@ public class MainController {
             return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
-
     @GetMapping("/employee/lastName")
     public ResponseEntity<?> getEmployeesByLastName(@RequestParam String lastName, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -118,4 +123,29 @@ public class MainController {
             return new ResponseEntity<>("No results found for employee number: " + empNo, HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/department")
+    public ResponseEntity<?> getDepartmentById(@RequestParam String id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<DepartmentDTO> departmentDTOOptional = departmentRepository.findById(id);
+        if (departmentDTOOptional.isPresent()) {
+            logger.log(Level.INFO, "Department " + id + " found: " + departmentDTOOptional.get());
+            return new ResponseEntity<DepartmentDTO>(departmentDTOOptional.get(), HttpStatus.OK);
+        } else {
+            logger.log(Level.INFO, "Department " + id + " not found");
+            return new ResponseEntity<>("Department " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/salary")
+    public ResponseEntity<?> getSalaryById(@RequestParam SalaryDTOId id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<SalaryDTO> salaryDTOOptional = salaryRepository.findById(id);
+        if (salaryDTOOptional.isPresent()) {
+            logger.log(Level.INFO, "Salary " + id + " found: " + salaryDTOOptional.get());
+            return new ResponseEntity<SalaryDTO>(salaryDTOOptional.get(), HttpStatus.OK);
+        } else {
+            logger.log(Level.INFO, "Salary " + id + " not found");
+            return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

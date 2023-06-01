@@ -1,6 +1,8 @@
 package com.bootswana.employeejpaproject.controllers;
 
+import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
+import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,29 +17,23 @@ import java.util.HashMap;
 public class DepartmentController {
     private DepartmentRepository departmentRepository;
     private DepartmentsService departmentsService;
+    private ApiKeyService apiKeyService;
 
     @Autowired
-    public DepartmentController(DepartmentRepository departmentRepository, DepartmentsService departmentsService) {
+    public DepartmentController(DepartmentRepository departmentRepository, DepartmentsService departmentsService, ApiKeyService apiKeyService) {
         this.departmentRepository = departmentRepository;
         this.departmentsService = departmentsService;
+        this.apiKeyService=apiKeyService;
     }
-
-
-
-//    @GetMapping("/departments")
-//    public HashMap<String, Integer> getDepartmentCount(@RequestParam int startYear, @RequestParam int endYear){
-//      return departmentsService.createDepartmentSummary(startYear, endYear);
-//    }
-// MethodArgumentTypeMismatchException
     @GetMapping("/departments")
-    public ResponseEntity<?> getDepartmentCount(@RequestParam int from, @RequestParam int to){
-        //check exception if incorrect datatype is entered on client side - MethodArgumentTypeMismatchException? and
-        // log invalid datatype
-
-        //if from>to return years need to be in order ResponseEntity and log invalid request
-
-        HashMap<String,Integer> result = departmentsService.createDepartmentSummary(from, to);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<?> getDepartmentCount(@RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        if (from > to) {
+            return new ResponseEntity<>("Invalid year range, the year " + from + " needs to be after " + to, HttpStatus.BAD_REQUEST);
+        } else {
+            HashMap<String, Integer> result = departmentsService.createDepartmentSummary(from, to);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
     }
 
 }
