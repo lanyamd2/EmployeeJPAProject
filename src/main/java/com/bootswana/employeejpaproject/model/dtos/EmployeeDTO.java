@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -41,20 +42,24 @@ public class EmployeeDTO {
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DeptEmpDTO> employeeDepartments;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private List<DeptManagerDTO> employeeManagers;
+    @JsonManagedReference
+    private List<DeptManagerDTO> managedDepartments;
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<SalaryDTO> employeeSalaries;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<TitleDTO> employeeTitles;
 
     public EmployeeDTO() {
@@ -68,12 +73,12 @@ public class EmployeeDTO {
         this.employeeDepartments = employeeDepartments;
     }
 
-    public List<DeptManagerDTO> getEmployeeManagers() {
-        return employeeManagers;
+    public List<DeptManagerDTO> getManagedDepartments() {
+        return managedDepartments;
     }
 
-    public void setEmployeeManagers(List<DeptManagerDTO> employeeManagers) {
-        this.employeeManagers = employeeManagers;
+    public void setManagedDepartments(List<DeptManagerDTO> managedDepartments) {
+        this.managedDepartments = managedDepartments;
     }
 
     public List<SalaryDTO> getEmployeeSalaries() {

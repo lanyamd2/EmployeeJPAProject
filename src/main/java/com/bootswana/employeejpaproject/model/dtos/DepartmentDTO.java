@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,11 +23,13 @@ public class DepartmentDTO {
     @OneToMany(mappedBy = "deptNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DeptEmpDTO> departmentEmployees;
 
     @OneToMany(mappedBy = "deptNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DeptManagerDTO> departmentManagers;
 
     public List<DeptEmpDTO> getDepartmentEmployees() {
