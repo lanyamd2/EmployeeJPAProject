@@ -42,24 +42,24 @@ public class EmployeeDTO {
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="employee_dept")
     private List<DeptEmpDTO> employeeDepartments;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="manager_dept")
     private List<DeptManagerDTO> managedDepartments;
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="salary")
     private List<SalaryDTO> employeeSalaries;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="title")
     private List<TitleDTO> employeeTitles;
 
     public EmployeeDTO() {

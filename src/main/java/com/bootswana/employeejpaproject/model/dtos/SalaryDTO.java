@@ -18,7 +18,7 @@ public class SalaryDTO {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "emp_no", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value="salary")
     private EmployeeDTO empNo;
 
     @NotNull

@@ -17,7 +17,7 @@ public class TitleDTO {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "emp_no", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value="title")
     private EmployeeDTO empNo;
 
     @Column(name = "to_date")

@@ -18,14 +18,14 @@ public class DeptManagerDTO {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "emp_no", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value="manager_dept")
     private EmployeeDTO empNo;
 
     @MapsId("deptNo")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "dept_no", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value="dept_manager")
     private DepartmentDTO deptNo;
 
     @NotNull

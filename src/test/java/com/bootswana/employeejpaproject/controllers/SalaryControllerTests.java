@@ -18,7 +18,7 @@ public class SalaryControllerTests {
     @DisplayName("Check if the status code is 200 if the correct parameters are entered for findAverageSalary")
     void checkFindAverageSalaryOkRequest(){
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response=restTemplate.exchange("http://localhost:8080/salary/average?title=Engineer&from=1986&to=1987&apiKey=test123", HttpMethod.GET,null, new ParameterizedTypeReference<String>(){});
+        ResponseEntity<String> response=restTemplate.exchange("http://localhost:8080/salary/average?title=Engineer&from=1986&to=1987&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", HttpMethod.GET,null, new ParameterizedTypeReference<String>(){});
         Assertions.assertEquals(HttpStatusCode.valueOf(200),response.getStatusCode());
     }
 

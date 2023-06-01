@@ -20,46 +20,39 @@ public class ApiKeyService {
     }
 
     public int getAccessLevel(String apiKey) throws ApiKeyNotFoundException {
-        try{
+        try {
             Integer level = apiKeyRepository.getApiAccessLevel(apiKey);
             return level;
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             logger.log(Level.WARNING, "API key not found");
             throw new ApiKeyNotFoundException(apiKey);
         }
     }
 
+
+
     public String generateApiKey(int accessLevel) {
-        if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
-            String key = Utility.generateKey();
+        String key = Utility.generateKey();
 
-            if (!isApiKeyExisting(key)) {
-                apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));
-                logger.log(Level.WARNING, "-------------------------------------------------------------------------");
-                logger.log(Level.WARNING, "New key generated with access level: " + accessLevel);
-                return "Access level: " + accessLevel +
-                        "<br>Key generated: " + key +
-                        "<br><br>Please save this key, as it will not be displayed again.";
-            }
-            else {
-                logger.log(Level.WARNING, "Error generating key, please try again");
-                return "Error generating key, please try again";
-            }
-
+        if (!isApiKeyExisting(key)) {
+            apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));
+            logger.log(Level.WARNING, "-------------------------------------------------------------------------");
+            logger.log(Level.WARNING, "New key generated with access level: " + accessLevel);
+            return "Access level: " + accessLevel +
+                    "<br>Key generated: " + key +
+                    "<br><br>Please save this key, as it will not be displayed again.";
         } else {
-            logger.log(Level.WARNING, "The client has not entered a correct API access level");
-            return "The client has not entered a correct API access level";//throw client access level not found
+            logger.log(Level.WARNING, "Error generating key, please try again");
+            return "Error generating key, please try again";
         }
     }
 
     public Boolean isApiKeyExisting(String apiKey) {
         if (apiKeyRepository.getApiKeyDTOByApiKey(apiKey) == (null)) {
             return false;
-        }
-        else if (apiKeyRepository.getApiKeyDTOByApiKey(apiKey).equals(apiKey)) {
-           return true;
-        }
-        else {
+        } else if (apiKeyRepository.getApiKeyDTOByApiKey(apiKey).equals(apiKey)) {
+            return true;
+        } else {
             return false;
         }
     }

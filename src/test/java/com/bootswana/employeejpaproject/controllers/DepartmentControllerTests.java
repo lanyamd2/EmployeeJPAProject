@@ -43,7 +43,7 @@ public class DepartmentControllerTests {
     void checkMethodArgumentMismatchException() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.exchange("http://localhost:8080/departments?from=19jhk6&to=1987&apiKey=test123", HttpMethod.GET,null, new ParameterizedTypeReference<HashMap<String,Integer>>(){});
+            restTemplate.exchange("http://localhost:8080/departments?from=19jhk6&to=1987&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", HttpMethod.GET,null, new ParameterizedTypeReference<HashMap<String,Integer>>(){});
             fail();
         } catch (HttpClientErrorException e) {
             if (!e.toString().contains("Parameter is of not the correct type, should be integer e.g. 1986")){
@@ -55,7 +55,7 @@ public class DepartmentControllerTests {
     @DisplayName("Check if the status code is 200 if the correct parameters are entered for getDepartmentCount")
     void checkGetDepartmentCountOkRequest(){
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<HashMap<String,Integer>> response=restTemplate.exchange("http://localhost:8080/departments?from=1986&to=1987&apiKey=test123", HttpMethod.GET,null, new ParameterizedTypeReference<HashMap<String,Integer>>(){});
+        ResponseEntity<HashMap<String,Integer>> response=restTemplate.exchange("http://localhost:8080/departments?from=1986&to=1987&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", HttpMethod.GET,null, new ParameterizedTypeReference<HashMap<String,Integer>>(){});
         Assertions.assertEquals(HttpStatusCode.valueOf(200),response.getStatusCode());
     }
 
