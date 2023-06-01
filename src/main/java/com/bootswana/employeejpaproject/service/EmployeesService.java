@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,19 +19,20 @@ public class EmployeesService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<EmployeeDTO> getEmployeesByLastName(String lastName) {
+    public Optional<List<EmployeeDTO>> getEmployeesByLastName(String lastName) {
         logger.log(Level.INFO, "");
         logger.log(Level.INFO, "Finding employees with the last name " + lastName + "...");
         List<EmployeeDTO> employees = employeeRepository.getEmployeesByLastName(lastName);
         if(employees.size() == 0) {
             logger.log(Level.INFO, "There are no employees with that last name.");
+            return Optional.empty();
         } else {
             logger.log(Level.INFO, employees.size() + " Employees Found:");
             for (EmployeeDTO employee : employees) {
                 logger.log(Level.INFO, employee.toString());
             }
+            return Optional.of(employees);
         }
-        return employees;
     }
 
     public List<EmployeeDTO> getEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate) {

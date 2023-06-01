@@ -23,13 +23,13 @@ public class DepartmentDTO {
     @OneToMany(mappedBy = "deptNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="dept_employee")
     private List<DeptEmpDTO> departmentEmployees;
 
     @OneToMany(mappedBy = "deptNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value="dept_manager")
     private List<DeptManagerDTO> departmentManagers;
 
     public List<DeptEmpDTO> getDepartmentEmployees() {
