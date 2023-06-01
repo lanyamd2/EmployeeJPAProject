@@ -24,8 +24,18 @@ public class ApiKeyRepositoryTests {
     void checkGetApiAccessLevel() {
         String key = "test123";
         System.out.println("Access level: " + apiKeyRepository.getApiAccessLevel(key));
-        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key).get());
+        Assertions.assertEquals(1, apiKeyRepository.getApiAccessLevel(key));
     }
+
+    @Test
+    @DisplayName("Check Get API Access Level if API key does not exist")
+    void checkGetApiAccessLevelNull() {
+        String key = "doesNotExist";
+        System.out.println("Access level: " + apiKeyRepository.getApiAccessLevel(key));
+        Assertions.assertEquals(null, apiKeyRepository.getApiAccessLevel(key));
+    }
+
+
 
     @Test
     @DisplayName("Check insert new api key into database")
