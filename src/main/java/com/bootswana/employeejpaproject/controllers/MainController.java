@@ -56,12 +56,11 @@ public class MainController {
         int level = apiKeyService.getAccessLevel(apiKey);
         Optional<EmployeeDTO> employeeDTOOptional = employeeRepository.findById(id);
         if (employeeDTOOptional.isPresent()) {
-            logger.log(Level.INFO,"Employee "+id+" found: "+employeeDTOOptional.get());
+            logger.log(Level.INFO, "Employee " + id + " found: " + employeeDTOOptional.get());
             return new ResponseEntity<EmployeeDTO>(employeeDTOOptional.get(), HttpStatus.OK);
         } else {
             logger.log(Level.INFO, "Employee " + id + " not found");
             return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
         }
-      
-
+    }
 }

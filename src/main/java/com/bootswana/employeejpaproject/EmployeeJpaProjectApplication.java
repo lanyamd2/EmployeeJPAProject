@@ -28,10 +28,10 @@ public class EmployeeJpaProjectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EmployeeJpaProjectApplication.class, args);
-		LogSetup.setup();
-		logger.log(Level.INFO, "Last update: " + LocalDateTime.now());
-		System.out.println("--------------------------------------------------------------");
-		System.out.println("Execution complete, results saved in src/main/logs/logFile.log");
-		System.out.println("--------------------------------------------------------------");
+//		LogSetup.setup();
+//		logger.log(Level.INFO, "Last update: " + LocalDateTime.now());
+//		System.out.println("--------------------------------------------------------------");
+//		System.out.println("Execution complete, results saved in src/main/logs/logFile.log");
+//		System.out.println("--------------------------------------------------------------");
 	}
 }

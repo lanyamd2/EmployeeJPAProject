@@ -25,7 +25,7 @@ public class ApiKeyService {
             return level;
         }catch(NullPointerException e){
             logger.log(Level.WARNING, "API key not found");
-            throw new ApiKeyNotFoundException(clientKey);
+            throw new ApiKeyNotFoundException(apiKey);
         }
     }
 
