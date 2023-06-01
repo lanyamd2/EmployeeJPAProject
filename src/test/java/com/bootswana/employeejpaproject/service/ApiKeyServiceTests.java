@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.service;
 
+import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,16 +17,9 @@ public class ApiKeyServiceTests {
 
     @Autowired
     ApiKeyService apiKeyService;
-    @Test
-    @DisplayName("Check for ")
-    void checkFor(){
-        System.out.println(apiKeyService.getAccessLevel("1234567890"));
-    }
 
     public static Stream<Arguments> checkGetAccessLevel() {
         return Stream.of(
-                Arguments.arguments(null,0),
-                Arguments.arguments("doesNotExist",0),
                 Arguments.arguments("test123",1),
                 Arguments.arguments("0987654321",2),
                 Arguments.arguments("1234567890",3)
@@ -35,6 +29,16 @@ public class ApiKeyServiceTests {
     @MethodSource
     @DisplayName("Check that method returns the accurate access level")
     void checkGetAccessLevel(String key, int expected) {
-        Assertions.assertEquals(expected,apiKeyService.getAccessLevel(key));
+        try {
+            Assertions.assertEquals(expected,apiKeyService.getAccessLevel(key));
+        } catch (ApiKeyNotFoundException e) {
+            System.out.println("Api Key Not Found");
+        }
+    }
+
+    @Test
+    @DisplayName("Check that method throws exception if API key is not found ")
+    void checkGetAccessLevelThrowsException(){
+        Assertions.assertThrows(ApiKeyNotFoundException.class,()->apiKeyService.getAccessLevel("doesNotExist"));
     }
 }

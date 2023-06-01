@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.service;
 
+import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.dtos.ApiKeyDTO;
 import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class ApiKeyService {
         this.apiKeyRepository = apiKeyRepository;
     }
 
-    public int getAccessLevel(String clientKey) {
+    public int getAccessLevel(String clientKey) throws ApiKeyNotFoundException {
         try{
             Integer level = apiKeyRepository.getApiAccessLevel(clientKey);
             return level;
         }catch(NullPointerException e){
             logger.log(Level.WARNING, "API key not found");
-            return 0;
+            throw new ApiKeyNotFoundException(clientKey);
         }
     }
 }
