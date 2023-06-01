@@ -11,8 +11,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class MethodArgumentMismatchAdvice {
     @ResponseBody
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     String methodArgumentTypeMismatchHandler(MethodArgumentTypeMismatchException e){
-        return "Parameter is not the correct type, should be integer e.g. 1986";
+        String message = "Parameter is of not the correct type";
+        if (e.toString().contains("LocalDate")) {
+            message += ", should be date e.g. 2000-12-28 (YYYY-MM-DD)";
+        } else if (e.toString().contains("int") || e.toString().contains("Integer")) {
+            message += ", should be integer e.g. 1986";
+        }
+        return message;
     }
 }
