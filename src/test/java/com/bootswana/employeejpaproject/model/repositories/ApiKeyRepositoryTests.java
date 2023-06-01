@@ -54,4 +54,19 @@ public class ApiKeyRepositoryTests {
 
         Assertions.assertEquals("ApiKeyDTO{apiKey='generated123', accessLevel=3}", result);
     }
+
+    @Test
+    @DisplayName("Check if api key exists")
+    void checkIfApiKeyExists() {
+        String key = "sdfgdsfg";
+        if (apiKeyRepository.getApiKeyDTOByApiKey(key) == (null)) {
+            System.out.println("null");
+        }
+        else if (apiKeyRepository.getApiKeyDTOByApiKey(key).equals(key)) {
+            System.out.println("exists");
+        }
+        else {
+            System.out.println("error");
+        }
+    }
 }

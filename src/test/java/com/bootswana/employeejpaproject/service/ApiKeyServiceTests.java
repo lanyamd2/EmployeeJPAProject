@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ApiKeyServiceTests {
@@ -33,6 +33,7 @@ public class ApiKeyServiceTests {
                 Arguments.arguments("1234567890",3)
         );
     }
+
     @ParameterizedTest
     @MethodSource
     @DisplayName("Check that method returns the accurate access level")
@@ -74,5 +75,17 @@ public class ApiKeyServiceTests {
     @DisplayName("Check key with access level 3 can be used")
     void checkKeyWithAccessLevel3CanBeUsed() {
         assertEquals(3, apiKeyService.getAccessLevel("_T6q6jHAO_zaCvWsDqcAEs8QphOEHzBl"));
+    }
+
+    @Test
+    @DisplayName("Check if api key exists")
+    void checkIfApiKeyExists() {
+        assertTrue(apiKeyService.isApiKeyExisting("FynHSkcoZzbPpGaIERHJUGZWD84YFS2Z"));
+    }
+
+    @Test
+    @DisplayName("Check if api key doesn't exists")
+    void checkIfApiKeyDoesntExists() {
+        assertFalse(apiKeyService.isApiKeyExisting("notAValidApiKey"));
     }
 }
