@@ -6,8 +6,6 @@ import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +27,21 @@ public class ApiKeyService {
         }catch(NullPointerException e){
             logger.log(Level.WARNING, "API key not found");
             throw new ApiKeyNotFoundException(clientKey);
+        }
+    }
+
+    public int generateApiKey(int accessLevel) {
+        if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
+            String key = Utility.generateKey();
+
+            apiKeyRepository.save(new ApiKeyDTO(key, accessLevel));
+            logger.log(Level.WARNING, "-------------------------------------------------------------------------");
+            logger.log(Level.WARNING, "Access level: " + accessLevel + ", Key generated: " + key);
+            logger.log(Level.WARNING, "Please save this key, as it will not be displayed again.");
+            logger.log(Level.WARNING, "-------------------------------------------------------------------------");
+        } else {
+            logger.log(Level.WARNING, "The client has not entered a correct API access level");
+            return 0;//throw client access level not found
         }
     }
 }

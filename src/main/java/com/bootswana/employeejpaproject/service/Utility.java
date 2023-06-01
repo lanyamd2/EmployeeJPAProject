@@ -2,8 +2,10 @@ package com.bootswana.employeejpaproject.service;
 
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 public class Utility {
     public static LocalDate startYearToLocalDate(int startYear) {
@@ -27,5 +29,14 @@ public class Utility {
                 ", hireDate=" + manager.getHireDate() + '\'' +
                 ", fromDate=" + manager.getFromDate() + '\'' +
                 ", toDate=" + manager.getToDate();
+    }
+
+    public static String generateKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] values = new byte[24];
+
+        secureRandom.nextBytes(values);
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(values); //URL and filename safe
     }
 }
