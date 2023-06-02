@@ -44,6 +44,7 @@ public class Utility {
         String endpoints = "Endpoints available: " +
                 System.lineSeparator() +
                 "/" + System.lineSeparator() +
+                System.lineSeparator() +
                 "/api/generate/{accessLevel}" + System.lineSeparator() +
                 "/api/check/{apiKey}" + System.lineSeparator() +
                 System.lineSeparator() +
