@@ -25,23 +25,4 @@ public interface EmployeeRepository extends JpaRepository<EmployeeDTO, Integer> 
     @Query(value = "SELECT e.* FROM employees.employees e JOIN employees.dept_manager dm on e.emp_no = dm.emp_no JOIN employees.departments d ON dm.dept_no = d.dept_no WHERE d.dept_name = :departmentName ORDER BY dm.from_date", nativeQuery = true)
     List<EmployeeDTO> findManagersByDepartmentNameChronologically(String departmentName);
 
-
-
-    @Modifying
-    @Query(value="INSERT INTO employees.employees (emp_no,birth_date,first_name,last_name,gender,hire_date) values (:empNo,:birthDate,:firstName,:lastName,:gender,:hireDate)",nativeQuery = true)
-    void insertEmployee(@Param("empNo") int empNo,
-                        @Param("birthDate")LocalDate birthDate,
-                        @Param("firstName")String firstName,
-                        @Param("lastName")String lastName,
-                        @Param("gender")String gender,
-                        @Param("hireDate") LocalDate hireDate);
-
-//    @Modifying
-//    @Query(
-//            value =
-//                    "INSERT INTO employees (name, age, email, status) values (:name, :age, :email, :status)",
-//            nativeQuery = true)
-//    void insertUser(@Param("name") String name, @Param("age") Integer age,
-//                    @Param("status") Integer status, @Param("email") String email);
-
 }

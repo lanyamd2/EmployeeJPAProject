@@ -54,26 +54,6 @@ public class EmployeeController {
         message=employeesService.createNewEmployee(employeeDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-//    @PutMapping("/employee/create")
-//    public ResponseEntity<?> createEmployee(
-//            @RequestParam int id,
-//            @RequestParam LocalDate birthDate,
-//            @RequestParam String firstName,
-//            @RequestParam String lastName,
-//            @RequestParam String gender,
-//            @RequestParam LocalDate hireDate,
-//            @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-//        int level =apiKeyService.getAccessLevel(apiKey);
-//        String message;
-//        if(level!=2&&level!=3){
-//            message = "Client is not authorised to create a record";
-//            logger.log(Level.WARNING, message);
-//            throw new ClientNotAuthorisedException();
-//        }
-//        message=employeesService.createNewEmployee(id,birthDate,firstName,lastName,gender,hireDate);
-//        return new ResponseEntity<>(message, HttpStatus.OK);
-//    }
-
 
     //update
 
