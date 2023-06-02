@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "employees")
 public class EmployeeDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(name = "emp_no", nullable = false)
     private Integer id;
 
@@ -63,6 +63,15 @@ public class EmployeeDTO {
     private List<TitleDTO> employeeTitles;
 
     public EmployeeDTO() {
+    }
+
+    public EmployeeDTO(Integer id, @NotNull LocalDate birthDate, @NotNull String firstName, @NotNull String lastName, @NotNull String gender, @NotNull LocalDate hireDate) {
+        this.id = id;
+        this.birthDate = birthDate;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.hireDate = hireDate;
     }
 
     public List<DeptEmpDTO> getEmployeeDepartments() {
