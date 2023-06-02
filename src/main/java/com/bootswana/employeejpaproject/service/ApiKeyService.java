@@ -1,11 +1,16 @@
 package com.bootswana.employeejpaproject.service;
 
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
+import com.bootswana.employeejpaproject.exception.ClientNotAuthorisedException;
 import com.bootswana.employeejpaproject.model.dtos.ApiKeyDTO;
 import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +31,21 @@ public class ApiKeyService {
         } catch (NullPointerException e) {
             logger.log(Level.WARNING, "API key not found");
             throw new ApiKeyNotFoundException(apiKey);
+        }
+    }
+
+    public void checkAccessRights(String apiKey, int accessLevel) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int keyLevel = getAccessLevel(apiKey);
+        if (keyLevel < accessLevel) {
+            String message;
+            if (accessLevel == 2) {
+                message = "You need access level: 2 (Update User) or 3 (Admin User), you have access level: 1 (Basic User)";
+            } else if (keyLevel == 2){
+                message = "You need access level: 3 (Admin User), you have access level: 2 (Update User)";
+            } else {
+                message = "You need access level: 3 (Admin User), you have access level: 1 (Basic User)";
+            }
+            throw new ClientNotAuthorisedException(message);
         }
     }
 

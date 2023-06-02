@@ -100,6 +100,23 @@ public class EmployeesService {
         return message;
     }
 
+    public String updateExistingEmployee(EmployeeDTO employeeDTO) {
+        String message;
+        int id=employeeDTO.getId();
+        Optional<EmployeeDTO> foundEmployee=employeeRepository.findById(id);
+        if(foundEmployee.isPresent()){
+            message = "Employee with the same id " + id + " found " +
+                    System.lineSeparator() +
+                    foundEmployee.get() +
+                    System.lineSeparator() +
+                    "Updated employee: "+employeeDTO + " will be saved!";
+            employeeRepository.save(employeeDTO);
+        } else {
+            message="New employee: "+employeeDTO+"  saved!";
+            employeeRepository.save(employeeDTO);
+        }
+        return message;
+    }
     public String deleteEmployeeById(int id) {
         String message;
         Optional<EmployeeDTO> foundEmployee = employeeRepository.findById(id);
@@ -116,4 +133,5 @@ public class EmployeesService {
         }
         return message;
     }
+
 }

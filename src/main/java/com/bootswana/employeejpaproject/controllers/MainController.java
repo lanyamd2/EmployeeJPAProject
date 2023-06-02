@@ -1,15 +1,14 @@
 package com.bootswana.employeejpaproject.controllers;
 
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
+import com.bootswana.employeejpaproject.exception.ClientNotAuthorisedException;
 import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
-import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import com.bootswana.employeejpaproject.service.*;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
-import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import java.util.Optional;
@@ -79,21 +76,17 @@ public class MainController {
     }
 
     @GetMapping("/api/check/{apiKey}")
-    public ResponseEntity<?> checkApiKey(@PathVariable String apiKey) throws
-            ApiKeyNotFoundException {
+    public ResponseEntity<?> checkApiKey(@PathVariable String apiKey) throws ApiKeyNotFoundException {
         int accessLevel = apiKeyService.getAccessLevel(apiKey);
 
-        if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
-            return new ResponseEntity<>("Key: " + apiKey + " has level " + accessLevel + " access rights", HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("Key not found", HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>("Key: " + apiKey + " has level " + accessLevel + " access rights", HttpStatus.OK);
     }
 
     @GetMapping("/employee")
-    public ResponseEntity<?> getEmployeeById(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
+    public ResponseEntity<?> getEmployeeById(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+
         Optional<EmployeeDTO> employeeDTOOptional = employeeRepository.findById(id);
         if (employeeDTOOptional.isPresent()) {
             logger.log(Level.INFO, "Employee " + id + " found: " + employeeDTOOptional.get());
@@ -106,8 +99,9 @@ public class MainController {
 
 
     @GetMapping("/employees")
-    public HttpEntity<?> getEmployeesByDeptOnDate(@RequestParam(name = "department") String deptName, @RequestParam(name = "date") LocalDate date, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
-        int level = apiKeyService.getAccessLevel(apiKey);
+    public HttpEntity<?> getEmployeesByDeptOnDate(@RequestParam(name = "department") String deptName, @RequestParam(name = "date") LocalDate date, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<List<EmployeeDTO>> employees = employeesService.getEmployeesByDepartmentNameOnDate(deptName, date);
         if(employees.isPresent()) {
             return new ResponseEntity<>(employees.get(), HttpStatus.OK);
@@ -117,8 +111,9 @@ public class MainController {
     }
 
     @GetMapping("/employees/managers")
-    public HttpEntity<?> getManagersByDeptChronologically(@RequestParam(name = "department") String deptName, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
-        int level = apiKeyService.getAccessLevel(apiKey);
+    public ResponseEntity<?> getManagersByDeptChronologically(@RequestParam(name = "department") String deptName, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<List<EmployeeDTO>> managers = employeesService.getManagersByDepartmentChronologically(deptName);
         if(managers.isPresent()) {
             return new ResponseEntity<>(managers.get(), HttpStatus.OK);
@@ -128,8 +123,9 @@ public class MainController {
     }
   
     @GetMapping("/employee/lastName")
-    public ResponseEntity<?> getEmployeesByLastName(@RequestParam String lastName, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
+    public ResponseEntity<?> getEmployeesByLastName(@RequestParam String lastName, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<List<EmployeeDTO>> list = employeesService.getEmployeesByLastName(lastName);
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
@@ -138,31 +134,35 @@ public class MainController {
         }
     }
   
-    @GetMapping("/salary/range") // example = /salary/range?jobTitle=Senior+Engineer&year=1986
-    public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String jobTitle, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
-        Optional<Map<String, BigDecimal>> map = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+    @GetMapping("/salary/range")
+    public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String title, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        Optional<Map<String, BigDecimal>> map = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(title, year);
+
         if (map.isPresent()) {
             return new ResponseEntity<>(map.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for job title: " + jobTitle + ", year: " + year, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for job title: " + title + ", year: " + year, HttpStatus.NOT_FOUND);
         }
     }
   
-    @GetMapping("/salary/genderPayGap") // example = /salary/genderPayGap?fromYear=1980&toYear=2000
-    public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int fromYear, @RequestParam int toYear, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
-        Optional<List<Object[]>> list = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+    @GetMapping("/salary/genderPayGap")
+    public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        Optional<List<Object[]>> list = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(from, to);
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + fromYear + " and " + toYear, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + from + " and " + to, HttpStatus.NOT_FOUND);
         }
     }
   
-    @GetMapping("/salary/department/average") // example = /salary/department/average?department=Finance&date=1988-10-23
-    public HttpEntity<?> getAverageSalaryForDepartmentOnGivenDate(@RequestParam String department, @RequestParam LocalDate date, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
+    @GetMapping("/salary/department/average")
+    public HttpEntity<?> getAverageSalaryForDepartmentOnGivenDate(@RequestParam String department, @RequestParam LocalDate date, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<Map<String, BigDecimal>> map = salariesService.getAverageSalaryForDepartmentOnGivenDate(department, date);
         if (map.isPresent()) {
             return new ResponseEntity<>(map.get(), HttpStatus.OK);
@@ -171,9 +171,10 @@ public class MainController {
         }
     }
   
-    @GetMapping("/salary/progression") // example = /salary/progression?empNo=10001
-    public HttpEntity<?> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(@RequestParam int empNo, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        apiKeyService.getAccessLevel(apiKey);
+    @GetMapping("/salary/progression")
+    public HttpEntity<?> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(@RequestParam int empNo, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<List<Integer>> list = salariesService.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
@@ -183,8 +184,9 @@ public class MainController {
     }
   
     @GetMapping("/department")
-    public ResponseEntity<?> getDepartmentById(@RequestParam String id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        int level = apiKeyService.getAccessLevel(apiKey);
+    public ResponseEntity<?> getDepartmentById(@RequestParam String id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
         Optional<DepartmentDTO> departmentDTOOptional = departmentRepository.findById(id);
         if (departmentDTOOptional.isPresent()) {
             logger.log(Level.INFO, "Department " + id + " found: " + departmentDTOOptional.get());
@@ -196,12 +198,13 @@ public class MainController {
     }
   
     @GetMapping("/salary")
-    public ResponseEntity<?> getSalaryById(@RequestParam SalaryDTOId id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        int level = apiKeyService.getAccessLevel(apiKey);
-        Optional<SalaryDTO> salaryDTOOptional = salaryRepository.findById(id);
-        if (salaryDTOOptional.isPresent()) {
-            logger.log(Level.INFO, "Salary " + id + " found: " + salaryDTOOptional.get());
-            return new ResponseEntity<SalaryDTO>(salaryDTOOptional.get(), HttpStatus.OK);
+    public ResponseEntity<?> getSalaryById(@RequestParam int id, @RequestParam LocalDate date, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 1;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        Optional<Integer> salary = salaryRepository.findById(id, date);
+        if (salary.isPresent()) {
+            logger.log(Level.INFO, "Salary " + id + " found: " + salary.get());
+            return new ResponseEntity<>(salary.get(), HttpStatus.OK);
         } else {
             logger.log(Level.INFO, "Salary " + id + " not found");
             return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.NOT_FOUND);
