@@ -44,14 +44,10 @@ public class EmployeeController {
     public ResponseEntity<?> createEmployee(
             @RequestBody EmployeeDTO employeeDTO,
             @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level =apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if(level!=2&&level!=3){
-            message = "Client is not authorised to create a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
-        }
-        message=employeesService.createNewEmployee(employeeDTO);
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+
+        String message=employeesService.createNewEmployee(employeeDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -59,14 +55,10 @@ public class EmployeeController {
 
     @DeleteMapping("/employee/delete")
     public ResponseEntity<?> deleteEmployee(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level = apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if (level != 3) {
-            message = "Client is not authorised to delete a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
-        }
-        message = employeesService.deleteEmployeeById(id);
+        int accessLevel = 3;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+
+        String message = employeesService.deleteEmployeeById(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
 }
