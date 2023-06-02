@@ -58,6 +58,12 @@ public class MainController {
         this.salariesService = salariesService;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> showEndpoints() {
+        String message = Utility.availableEndpoints();
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     @GetMapping("/api/generate/{accessLevel}")
     public ResponseEntity<?> generateApiKey(@PathVariable Integer accessLevel) {
         if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {

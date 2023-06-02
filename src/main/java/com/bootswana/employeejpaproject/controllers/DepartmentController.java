@@ -1,20 +1,24 @@
 package com.bootswana.employeejpaproject.controllers;
 
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
+import com.bootswana.employeejpaproject.exception.ClientNotAuthorisedException;
+import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
+import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 public class DepartmentController {
+    static Logger logger = Logger.getLogger(DepartmentController.class.getName());
     private DepartmentRepository departmentRepository;
     private DepartmentsService departmentsService;
     private ApiKeyService apiKeyService;
@@ -36,4 +40,18 @@ public class DepartmentController {
         }
     }
 
+    @PutMapping("/department/create")
+    public ResponseEntity<?> createDepartment(
+            @RequestBody DepartmentDTO departmentDTO,
+            @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int level =apiKeyService.getAccessLevel(apiKey);
+        String message;
+        if(level!=2&&level!=3){
+            message = "Client is not authorised to create a record";
+            logger.log(Level.WARNING, message);
+            throw new ClientNotAuthorisedException();
+        }
+        message=departmentsService.createNewDepartment(departmentDTO);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }

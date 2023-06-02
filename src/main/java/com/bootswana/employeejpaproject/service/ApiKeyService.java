@@ -57,8 +57,11 @@ public class ApiKeyService {
             logger.log(Level.WARNING, "-------------------------------------------------------------------------");
             logger.log(Level.WARNING, "New key generated with access level: " + accessLevel);
             return "Access level: " + accessLevel +
-                    "<br>Key generated: " + key +
-                    "<br><br>Please save this key, as it will not be displayed again.";
+                    System.lineSeparator() +
+                    "Key generated: " + key +
+                    System.lineSeparator() +
+                    System.lineSeparator() +
+                    "Please save this key, as it will not be displayed again.";
         } else {
             logger.log(Level.WARNING, "Error generating key, please try again");
             return "Error generating key, please try again";
