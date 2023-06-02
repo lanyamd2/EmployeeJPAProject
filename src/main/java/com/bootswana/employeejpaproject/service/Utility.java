@@ -60,7 +60,7 @@ public class Utility {
                 "/department/create" + System.lineSeparator() +
                 System.lineSeparator() +
                 "/salary" + System.lineSeparator() +
-                "/salary/average" + System.lineSeparator() +
+                "/salary/title/average" + System.lineSeparator() +
                 "/salary/range" + System.lineSeparator() +
                 "/salary/genderPayGap" + System.lineSeparator() +
                 "/salary/department/average" + System.lineSeparator() +

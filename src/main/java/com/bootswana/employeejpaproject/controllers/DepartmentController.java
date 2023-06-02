@@ -44,14 +44,9 @@ public class DepartmentController {
     public ResponseEntity<?> createDepartment(
             @RequestBody DepartmentDTO departmentDTO,
             @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level =apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if(level!=2&&level!=3){
-            message = "Client is not authorised to create a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
-        }
-        message=departmentsService.createNewDepartment(departmentDTO);
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        String message = departmentsService.createNewDepartment(departmentDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

@@ -19,7 +19,7 @@ public class SalaryController {
         this.salariesService = salariesService;
     }
 
-    @GetMapping("/salary/average")
+    @GetMapping("/salary/title/average")
     public ResponseEntity<?> getAverageSalaryByTitleAndYearRange(@RequestParam String title, @RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
         if(from>to){
