@@ -38,7 +38,7 @@ public class MainControllerTests {
     void testEmployeesEndpointByValidDeptAndDate() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<EmployeeDTO>> response = restTemplate.exchange(
-                "http://localhost:8080/employees?department=Finance&date=2000-01-01&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8",
+                "http://localhost:8080/employees?department=Finance&date=2000-01-01&apiKey=apiKey1",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -52,7 +52,7 @@ public class MainControllerTests {
     void testEmployeesEndpointByInvalidDeptAndDate() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.getForEntity("http://localhost:8080/employees?department=Technology&date=2000-01-01&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
+            restTemplate.getForEntity("http://localhost:8080/employees?department=Technology&date=2000-01-01&apiKey=apiKey1", String.class);
             fail();
         } catch (HttpClientErrorException e) {
             if (!e.toString().contains("No employees found working in the Technology department on 2000-01-01")){
@@ -62,11 +62,24 @@ public class MainControllerTests {
     }
 
     @Test
+    @DisplayName("test managers by valid department")
+    void testManagersEndpointByValidDept() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<EmployeeDTO>> response = restTemplate.exchange(
+                "http://localhost:8080/employees/managers?department=Finance&apiKey=apiKey1",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     @DisplayName("test managers by invalid department")
     void testManagersEndpointByInvalidDept() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.getForEntity("http://localhost:8080/employees/managers?department=Technology&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
+            restTemplate.getForEntity("http://localhost:8080/employees/managers?department=Technology&apiKey=apiKey1", String.class);
             fail();
         } catch (HttpClientErrorException e) {
             if (!e.toString().contains("No managers found from the Technology department")){

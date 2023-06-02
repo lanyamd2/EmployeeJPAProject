@@ -55,14 +55,14 @@ class EmployeeRepositoryTests {
     @Test
     @DisplayName("Check that managers by department name query returns a filled list when requesting for a valid department")
     void checkForManagersByDepartmentName() {
-        List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically("Customer Service");
+        List<IManagerProjection> managersAndDates = employeeRepository.findManagersAndDatesByDepartmentNameChronologically("Customer Service");
         Assertions.assertTrue(managersAndDates.size() >= 1);
     }
 
     @Test
     @DisplayName("Check that managers by department name query returns an empty list when requesting for a non-existent department")
     void checkForManagersByNonExistentDepartmentName() {
-        List<IManagerProjection> managersAndDates = employeeRepository.findManagersByDepartmentNameChronologically("Human Resources");
+        List<IManagerProjection> managersAndDates = employeeRepository.findManagersAndDatesByDepartmentNameChronologically("Human Resources");
         Assertions.assertFalse(managersAndDates.size() <= 1);
     }
 }
