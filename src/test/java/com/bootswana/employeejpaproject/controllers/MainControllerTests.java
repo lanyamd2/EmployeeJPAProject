@@ -1,6 +1,11 @@
 package com.bootswana.employeejpaproject.controllers;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
+import com.bootswana.employeejpaproject.service.DepartmentsService;
+import com.bootswana.employeejpaproject.service.EmployeesService;
+import com.bootswana.employeejpaproject.service.SalariesService;
+import org.junit.jupiter.api.Assertions;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import com.bootswana.employeejpaproject.service.EmployeesService;
 import com.bootswana.employeejpaproject.service.SalariesService;
@@ -15,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Optional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +40,18 @@ public class MainControllerTests {
     SalariesService salariesService;
 
     @Test
+    @DisplayName("test employees by valid department and date")
+    void testEmployeesEndpointByValidDeptAndDate() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<EmployeeDTO>> response = restTemplate.exchange(
+                "http://localhost:8080/employees?department=Finance&date=2000-01-01&apiKey=apiKey1",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+          );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+  
     @DisplayName("Test Valid Employees By last Name Endpoint")
     void testValidEmployeesByLastNameEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
@@ -45,6 +64,20 @@ public class MainControllerTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
+    @Test
+    @DisplayName("test employees by invalid department and date")
+    void testEmployeesEndpointByInvalidDeptAndDate() {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            restTemplate.getForEntity("http://localhost:8080/employees?department=Technology&date=2000-01-01&apiKey=apiKey1", String.class);
+            fail();
+        } catch (HttpClientErrorException e) {
+            if (!e.toString().contains("No employees found working in the Technology department on 2000-01-01")){
+              fail();
+            }
+        }
+    }
+  
     @Test
     @DisplayName("Test Invalid Employees By Last Name Endpoint")
     void testInvalidEmployeesByLastNameEndpoint() {
@@ -87,6 +120,18 @@ public class MainControllerTests {
     }
 
     @Test
+    @DisplayName("test managers by valid department")
+    void testManagersEndpointByValidDept() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<EmployeeDTO>> response = restTemplate.exchange(
+                "http://localhost:8080/employees/managers?department=Finance&apiKey=apiKey1",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+  
     @DisplayName("Test Valid Gender Pay Gap Percentage Between Two Years For Each Job Title Endpoint")
     void testValidGenderPayGapPercentageBetweenTwoYearsForEachJobTitleEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
@@ -127,6 +172,19 @@ public class MainControllerTests {
     }
 
     @Test
+    @DisplayName("test managers by invalid department")
+    void testManagersEndpointByInvalidDept() {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            restTemplate.getForEntity("http://localhost:8080/employees/managers?department=Technology&apiKey=apiKey1", String.class);
+            fail();
+        } catch (HttpClientErrorException e) {
+            if (!e.toString().contains("No managers found from the Technology department")){
+              fail();
+            }
+        }
+    }
+  
     @DisplayName("Test Invalid Average Salary For Department On Given Date Endpoint")
     void testInvalidAverageSalaryForDepartmentOnGivenDateEndpoint() {
         RestTemplate restTemplate = new RestTemplate();

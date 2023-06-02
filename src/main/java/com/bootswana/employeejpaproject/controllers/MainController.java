@@ -3,6 +3,9 @@ package com.bootswana.employeejpaproject.controllers;
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
+import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
+import com.bootswana.employeejpaproject.service.*;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class MainController {
@@ -73,6 +77,29 @@ public class MainController {
             return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
+  
+    @GetMapping("/employees")
+    public HttpEntity<?> getEmployeesByDeptOnDate(@RequestParam(name = "department") String deptName, @RequestParam(name = "date") LocalDate date, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<List<EmployeeDTO>> employees = employeesService.getEmployeesByDepartmentNameOnDate(deptName, date);
+        if(employees.isPresent()) {
+            return new ResponseEntity<>(employees.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No employees found working in the " + deptName + " department on " + Utility.getDateAsString(date), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/employees/managers")
+    public HttpEntity<?> getManagersByDeptChronologically(@RequestParam(name = "department") String deptName, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<List<EmployeeDTO>> managers = employeesService.getManagersByDepartmentChronologically(deptName);
+        if(managers.isPresent()) {
+            return new ResponseEntity<>(managers.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No managers found from the " + deptName + " department", HttpStatus.NOT_FOUND);
+        }
+    }
+  
     @GetMapping("/employee/lastName")
     public ResponseEntity<?> getEmployeesByLastName(@RequestParam String lastName, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -83,6 +110,7 @@ public class MainController {
             return new ResponseEntity<>("Employee with last name: " + lastName + ", not found", HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/salary/range") // example = /salary/range?jobTitle=Senior+Engineer&year=1986
     public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String jobTitle, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -93,6 +121,7 @@ public class MainController {
             return new ResponseEntity<>("No results found for job title: " + jobTitle + ", year: " + year, HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/salary/genderPayGap") // example = /salary/genderPayGap?fromYear=1980&toYear=2000
     public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int fromYear, @RequestParam int toYear, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -103,6 +132,7 @@ public class MainController {
             return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + fromYear + " and " + toYear, HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/salary/department/average") // example = /salary/department/average?department=Finance&date=1988-10-23
     public HttpEntity<?> getAverageSalaryForDepartmentOnGivenDate(@RequestParam String department, @RequestParam LocalDate date, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -113,6 +143,7 @@ public class MainController {
             return new ResponseEntity<>("No results found for department: " + department + ", date: " + date, HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/salary/progression") // example = /salary/progression?empNo=10001
     public HttpEntity<?> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(@RequestParam int empNo, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -123,6 +154,7 @@ public class MainController {
             return new ResponseEntity<>("No results found for employee number: " + empNo, HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/department")
     public ResponseEntity<?> getDepartmentById(@RequestParam String id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         int level = apiKeyService.getAccessLevel(apiKey);
@@ -135,6 +167,7 @@ public class MainController {
             return new ResponseEntity<>("Department " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
+  
     @GetMapping("/salary")
     public ResponseEntity<?> getSalaryById(@RequestParam SalaryDTOId id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         int level = apiKeyService.getAccessLevel(apiKey);
@@ -147,5 +180,4 @@ public class MainController {
             return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
-
 }
