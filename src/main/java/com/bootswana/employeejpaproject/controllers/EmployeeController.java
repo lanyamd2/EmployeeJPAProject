@@ -29,7 +29,7 @@ public class EmployeeController {
         this.apiKeyService = apiKeyService;
     }
 
-    @PutMapping("/employee/create")
+    @PostMapping("/employee")
     public ResponseEntity<?> createEmployee(
             @RequestParam Integer id, @RequestParam LocalDate birthDate,
             @RequestParam String firstName, @RequestParam String lastName,
@@ -41,11 +41,11 @@ public class EmployeeController {
         if(!isGenderValid(gender)){
             return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
         }
-        String message = employeesService.createNewEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
+        String message = employeesService.createNewEmployee(id,birthDate,firstName,lastName,gender,hireDate);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PutMapping("/employee/update")
+    @PutMapping("/employee")
     public ResponseEntity<?> updateEmployee(
             @RequestParam Integer id, @RequestParam LocalDate birthDate,
             @RequestParam String firstName, @RequestParam String lastName,

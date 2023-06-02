@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeDTO, Integer> {
@@ -25,4 +26,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeDTO, Integer> 
     @Query(value = "SELECT e.* FROM employees.employees e JOIN employees.dept_manager dm on e.emp_no = dm.emp_no JOIN employees.departments d ON dm.dept_no = d.dept_no WHERE d.dept_name = :departmentName ORDER BY dm.from_date", nativeQuery = true)
     List<EmployeeDTO> findManagersByDepartmentNameChronologically(String departmentName);
 
+    @Query(value="SELECT * FROM employees.employees where birth_date= :birthDate AND first_name=:firstName AND last_name=:lastName AND gender=:gender AND hire_date=:hireDate",nativeQuery = true)
+    Optional<EmployeeDTO> findDuplicateEmployee(LocalDate birthDate, String firstName, String lastName, String gender, LocalDate hireDate );
 }
