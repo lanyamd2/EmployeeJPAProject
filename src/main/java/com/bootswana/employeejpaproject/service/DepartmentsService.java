@@ -1,23 +1,20 @@
-package com.bootswana.employeejpaproject.services;
+package com.bootswana.employeejpaproject.service;
+import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.DeptEmpDTO;
+import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
-import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
 import com.bootswana.employeejpaproject.model.repositories.DeptEmpRepository;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -67,5 +64,21 @@ public class DepartmentsService {
             }
         }
         return map;
+    }
+
+    public String createNewDepartment(DepartmentDTO departmentDTO) {
+        String message;
+        String id=departmentDTO.getDeptNo();
+        Optional<DepartmentDTO> foundDepartment = departmentRepository.findById(id);
+        if (foundDepartment.isPresent()) {
+            message = "Department with the same id " + id + " found, called: " +
+                    foundDepartment.get().getDeptName() +
+                    System.lineSeparator() +
+                    "New department: "+departmentDTO.getDeptName() + ", not saved!";
+        } else {
+            message="New department: "+departmentDTO.getDeptName()+",  saved!";
+            departmentRepository.save(departmentDTO);
+        }
+        return message;
     }
 }

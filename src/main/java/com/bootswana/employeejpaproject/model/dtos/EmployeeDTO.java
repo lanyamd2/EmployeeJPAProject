@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,7 +12,7 @@ import java.util.List;
 @Table(name = "employees")
 public class EmployeeDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(name = "emp_no", nullable = false)
     private Integer id;
 
@@ -41,23 +42,36 @@ public class EmployeeDTO {
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference(value="employee_dept")
     private List<DeptEmpDTO> employeeDepartments;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private List<DeptManagerDTO> employeeManagers;
+    @JsonManagedReference(value="manager_dept")
+    private List<DeptManagerDTO> managedDepartments;
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference(value="salary")
     private List<SalaryDTO> employeeSalaries;
 
     @OneToMany(mappedBy = "empNo",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonManagedReference(value="title")
     private List<TitleDTO> employeeTitles;
 
     public EmployeeDTO() {
+    }
+
+    public EmployeeDTO(Integer id, @NotNull LocalDate birthDate, @NotNull String firstName, @NotNull String lastName, @NotNull String gender, @NotNull LocalDate hireDate) {
+        this.id = id;
+        this.birthDate = birthDate;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.hireDate = hireDate;
     }
 
     public List<DeptEmpDTO> getEmployeeDepartments() {
@@ -68,12 +82,12 @@ public class EmployeeDTO {
         this.employeeDepartments = employeeDepartments;
     }
 
-    public List<DeptManagerDTO> getEmployeeManagers() {
-        return employeeManagers;
+    public List<DeptManagerDTO> getManagedDepartments() {
+        return managedDepartments;
     }
 
-    public void setEmployeeManagers(List<DeptManagerDTO> employeeManagers) {
-        this.employeeManagers = employeeManagers;
+    public void setManagedDepartments(List<DeptManagerDTO> managedDepartments) {
+        this.managedDepartments = managedDepartments;
     }
 
     public List<SalaryDTO> getEmployeeSalaries() {

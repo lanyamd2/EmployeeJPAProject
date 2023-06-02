@@ -1,5 +1,6 @@
 package com.bootswana.employeejpaproject.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
@@ -17,6 +18,7 @@ public class SalaryDTO {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "emp_no", nullable = false)
+    @JsonBackReference(value="salary")
     private EmployeeDTO empNo;
 
     @NotNull
