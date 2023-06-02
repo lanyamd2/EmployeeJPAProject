@@ -2,8 +2,11 @@ package com.bootswana.employeejpaproject.model.repositories;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
 import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +27,21 @@ public interface EmployeeRepository extends JpaRepository<EmployeeDTO, Integer> 
 
 
 
+    @Modifying
+    @Query(value="INSERT INTO employees.employees (emp_no,birth_date,first_name,last_name,gender,hire_date) values (:empNo,:birthDate,:firstName,:lastName,:gender,:hireDate)",nativeQuery = true)
+    void insertEmployee(@Param("empNo") int empNo,
+                        @Param("birthDate")LocalDate birthDate,
+                        @Param("firstName")String firstName,
+                        @Param("lastName")String lastName,
+                        @Param("gender")String gender,
+                        @Param("hireDate") LocalDate hireDate);
 
-
+//    @Modifying
+//    @Query(
+//            value =
+//                    "INSERT INTO employees (name, age, email, status) values (:name, :age, :email, :status)",
+//            nativeQuery = true)
+//    void insertUser(@Param("name") String name, @Param("age") Integer age,
+//                    @Param("status") Integer status, @Param("email") String email);
 
 }
