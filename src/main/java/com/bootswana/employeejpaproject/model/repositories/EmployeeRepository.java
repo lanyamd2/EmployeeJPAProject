@@ -20,7 +20,12 @@ public interface EmployeeRepository extends JpaRepository<EmployeeDTO, Integer> 
     List<EmployeeDTO> findEmployeesByDepartmentNameOnDate(String departmentName, LocalDate chosenDate);
 
     @Query(value = "SELECT e.emp_no as empNo, e.birth_date as birthDate, e.first_name as firstName, e.last_name as lastName, e.gender as gender, e.hire_date as hireDate, dm.from_date as fromDate, dm.to_date as toDate FROM employees.employees e JOIN employees.dept_manager dm on e.emp_no = dm.emp_no JOIN employees.departments d ON dm.dept_no = d.dept_no WHERE d.dept_name = :departmentName ORDER BY dm.from_date", nativeQuery = true)
-    List<IManagerProjection> findManagersByDepartmentNameChronologically(String departmentName);
+    List<IManagerProjection> findManagersAndDatesByDepartmentNameChronologically(String departmentName);
+
+    @Query(value = "SELECT e.* FROM employees.employees e JOIN employees.dept_manager dm on e.emp_no = dm.emp_no JOIN employees.departments d ON dm.dept_no = d.dept_no WHERE d.dept_name = :departmentName ORDER BY dm.from_date", nativeQuery = true)
+    List<EmployeeDTO> findManagersByDepartmentNameChronologically(String departmentName);
+
+
 
     @Modifying
     @Query(value="INSERT INTO employees.employees (emp_no,birth_date,first_name,last_name,gender,hire_date) values (:empNo,:birthDate,:firstName,:lastName,:gender,:hireDate)",nativeQuery = true)
