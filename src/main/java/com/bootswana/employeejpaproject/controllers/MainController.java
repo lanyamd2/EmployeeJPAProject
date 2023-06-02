@@ -61,10 +61,30 @@ public class MainController {
         this.salariesService = salariesService;
     }
 
-    @GetMapping("/api/generate/{id}")
-    public String generateApiKey(@PathVariable Integer id) {
-        return apiKeyService.generateApiKey(id);
+    @GetMapping("/api/generate/{accessLevel}")
+    public ResponseEntity<?> generateApiKey(@PathVariable Integer accessLevel) {
+        if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
+            String message = apiKeyService.generateApiKey(accessLevel);
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        } else {
+            logger.log(Level.WARNING, "The client has not entered a correct API access level");
+            return new ResponseEntity<>("Incorrect API access level", HttpStatus.BAD_REQUEST);
+        }
     }
+
+    @GetMapping("/api/check/{apiKey}")
+    public ResponseEntity<?> checkApiKey(@PathVariable String apiKey) throws
+            ApiKeyNotFoundException {
+        int accessLevel = apiKeyService.getAccessLevel(apiKey);
+
+        if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
+            return new ResponseEntity<>("Key: " + apiKey + " has level " + accessLevel + " access rights", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Key not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/employee")
     public ResponseEntity<?> getEmployeeById(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
@@ -77,7 +97,8 @@ public class MainController {
             return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
-  
+
+
     @GetMapping("/employees")
     public HttpEntity<?> getEmployeesByDeptOnDate(@RequestParam(name = "department") String deptName, @RequestParam(name = "date") LocalDate date, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
         int level = apiKeyService.getAccessLevel(apiKey);
