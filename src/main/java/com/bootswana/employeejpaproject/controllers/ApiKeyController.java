@@ -24,9 +24,4 @@ public class ApiKeyController {
         this.apiKeyService = apiKeyService;
     }
 
-
-//    @GetMapping("/api/generate/{id}")
-//    public String generateApiKey(@PathVariable Integer id) {
-//        return apiKeyService.generateApiKey(id);
-//    }
 }

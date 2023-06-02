@@ -1,14 +1,15 @@
 package com.bootswana.employeejpaproject.controllers;
 
-import com.bootswana.employeejpaproject.EmployeeJpaProjectApplication;
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
+import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
+import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
+import com.bootswana.employeejpaproject.service.*;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
-import com.bootswana.employeejpaproject.model.repositories.ApiKeyRepository;
 import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
@@ -20,17 +21,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.text.html.Option;
+import java.time.LocalDate;
+import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class MainController {
@@ -55,7 +60,7 @@ public class MainController {
         this.salaryRepository = salaryRepository;
         this.salariesService = salariesService;
     }
-  
+
     @GetMapping("/api/generate/{accessLevel}")
     public ResponseEntity<?> generateApiKey(@PathVariable Integer accessLevel) {
         if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
@@ -69,7 +74,7 @@ public class MainController {
 
     @GetMapping("/api/check/{apiKey}")
     public ResponseEntity<?> checkApiKey(@PathVariable String apiKey) throws
-        ApiKeyNotFoundException {
+            ApiKeyNotFoundException {
         int accessLevel = apiKeyService.getAccessLevel(apiKey);
 
         if (accessLevel == 1 || accessLevel == 2 || accessLevel == 3) {
@@ -80,9 +85,9 @@ public class MainController {
         }
     }
 
-    @GetMapping("/employee")//api key to be implemented, also try catch for MethodArgumentMismatch
+    @GetMapping("/employee")
     public ResponseEntity<?> getEmployeeById(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
-        int level = apiKeyService.getAccessLevel(apiKey);
+        apiKeyService.getAccessLevel(apiKey);
         Optional<EmployeeDTO> employeeDTOOptional = employeeRepository.findById(id);
         if (employeeDTOOptional.isPresent()) {
             logger.log(Level.INFO, "Employee " + id + " found: " + employeeDTOOptional.get());
@@ -93,6 +98,84 @@ public class MainController {
         }
     }
 
+
+    @GetMapping("/employees")
+    public HttpEntity<?> getEmployeesByDeptOnDate(@RequestParam(name = "department") String deptName, @RequestParam(name = "date") LocalDate date, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<List<EmployeeDTO>> employees = employeesService.getEmployeesByDepartmentNameOnDate(deptName, date);
+        if(employees.isPresent()) {
+            return new ResponseEntity<>(employees.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No employees found working in the " + deptName + " department on " + Utility.getDateAsString(date), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/employees/managers")
+    public HttpEntity<?> getManagersByDeptChronologically(@RequestParam(name = "department") String deptName, @RequestParam(name = "apiKey") String apiKey) throws ApiKeyNotFoundException {
+        int level = apiKeyService.getAccessLevel(apiKey);
+        Optional<List<EmployeeDTO>> managers = employeesService.getManagersByDepartmentChronologically(deptName);
+        if(managers.isPresent()) {
+            return new ResponseEntity<>(managers.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No managers found from the " + deptName + " department", HttpStatus.NOT_FOUND);
+        }
+    }
+  
+    @GetMapping("/employee/lastName")
+    public ResponseEntity<?> getEmployeesByLastName(@RequestParam String lastName, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        Optional<List<EmployeeDTO>> list = employeesService.getEmployeesByLastName(lastName);
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Employee with last name: " + lastName + ", not found", HttpStatus.NOT_FOUND);
+        }
+    }
+  
+    @GetMapping("/salary/range") // example = /salary/range?jobTitle=Senior+Engineer&year=1986
+    public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String jobTitle, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        Optional<Map<String, BigDecimal>> map = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+        if (map.isPresent()) {
+            return new ResponseEntity<>(map.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No results found for job title: " + jobTitle + ", year: " + year, HttpStatus.NOT_FOUND);
+        }
+    }
+  
+    @GetMapping("/salary/genderPayGap") // example = /salary/genderPayGap?fromYear=1980&toYear=2000
+    public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int fromYear, @RequestParam int toYear, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        Optional<List<Object[]>> list = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + fromYear + " and " + toYear, HttpStatus.NOT_FOUND);
+        }
+    }
+  
+    @GetMapping("/salary/department/average") // example = /salary/department/average?department=Finance&date=1988-10-23
+    public HttpEntity<?> getAverageSalaryForDepartmentOnGivenDate(@RequestParam String department, @RequestParam LocalDate date, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        Optional<Map<String, BigDecimal>> map = salariesService.getAverageSalaryForDepartmentOnGivenDate(department, date);
+        if (map.isPresent()) {
+            return new ResponseEntity<>(map.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No results found for department: " + department + ", date: " + date, HttpStatus.NOT_FOUND);
+        }
+    }
+  
+    @GetMapping("/salary/progression") // example = /salary/progression?empNo=10001
+    public HttpEntity<?> getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(@RequestParam int empNo, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        Optional<List<Integer>> list = salariesService.getFirstFiveSalariesOfAnEmployeeByEmployeeNumber(empNo);
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No results found for employee number: " + empNo, HttpStatus.NOT_FOUND);
+        }
+    }
+  
     @GetMapping("/department")
     public ResponseEntity<?> getDepartmentById(@RequestParam String id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         int level = apiKeyService.getAccessLevel(apiKey);
@@ -105,7 +188,7 @@ public class MainController {
             return new ResponseEntity<>("Department " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
-
+  
     @GetMapping("/salary")
     public ResponseEntity<?> getSalaryById(@RequestParam SalaryDTOId id, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         int level = apiKeyService.getAccessLevel(apiKey);
@@ -118,18 +201,4 @@ public class MainController {
             return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.NOT_FOUND);
         }
     }
-
-//    @GetMapping("/departments")
-//    public ResponseEntity<?> getAllDepartments( @RequestParam String apiKey) throws ApiKeyNotFoundException {
-//        int level = apiKeyService.getAccessLevel(apiKey);
-//        Optional<DepartmentDTO> departmentDTOOptional = departmentRepository.;
-//
-//        if (departmentDTOOptional.isPresent()) {
-//            logger.log(Level.INFO, "Departments found: " + departmentDTOOptional.get());
-//            return new ResponseEntity<DepartmentDTO>(departmentDTOOptional.get(), HttpStatus.OK);
-//        } else {
-//            logger.log(Level.INFO, "Departments not found");
-//            return new ResponseEntity<>("Departments not found", HttpStatus.NOT_FOUND);
-//        }
-//    }
 }
