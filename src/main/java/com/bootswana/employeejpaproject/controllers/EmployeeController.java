@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,9 @@ public class EmployeeController {
 
         int accessLevel = 2;
         apiKeyService.checkAccessRights(apiKey, accessLevel);
-
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.METHOD_NOT_ALLOWED );
+        }
         String message = employeesService.createNewEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -50,6 +53,9 @@ public class EmployeeController {
             @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
         int accessLevel = 2;
         apiKeyService.checkAccessRights(apiKey, accessLevel);
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.METHOD_NOT_ALLOWED );
+        }
         String message = employeesService.updateExistingEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -58,8 +64,16 @@ public class EmployeeController {
     public ResponseEntity<?> deleteEmployee(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
         int accessLevel = 3;
         apiKeyService.checkAccessRights(apiKey, accessLevel);
-
         String message = employeesService.deleteEmployeeById(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
+    }
+
+    public boolean isGenderValid(String gender){
+        if(gender.equals("M")){
+            return true;
+        } else if (gender.equals("F")) {
+            return true;
+        }
+        return false;
     }
 }
