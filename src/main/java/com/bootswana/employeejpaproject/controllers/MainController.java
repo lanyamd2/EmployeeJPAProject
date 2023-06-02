@@ -3,13 +3,11 @@ package com.bootswana.employeejpaproject.controllers;
 import com.bootswana.employeejpaproject.exception.ApiKeyNotFoundException;
 import com.bootswana.employeejpaproject.model.dtos.DepartmentDTO;
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
-import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
 import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import com.bootswana.employeejpaproject.service.*;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
 import com.bootswana.employeejpaproject.model.repositories.DepartmentRepository;
-import com.bootswana.employeejpaproject.model.repositories.EmployeeRepository;
 import com.bootswana.employeejpaproject.model.repositories.SalaryRepository;
 import com.bootswana.employeejpaproject.service.ApiKeyService;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
@@ -27,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import java.util.Optional;
@@ -133,24 +129,24 @@ public class MainController {
     }
   
     @GetMapping("/salary/range") // example = /salary/range?jobTitle=Senior+Engineer&year=1986
-    public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String jobTitle, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+    public HttpEntity<?> getLowestAndHighestSalaryForJobTitleDuringAYear(@RequestParam String title, @RequestParam int year, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
-        Optional<Map<String, BigDecimal>> map = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(jobTitle, year);
+        Optional<Map<String, BigDecimal>> map = salariesService.getLowestAndHighestSalaryForJobTitleDuringAYear(title, year);
         if (map.isPresent()) {
             return new ResponseEntity<>(map.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for job title: " + jobTitle + ", year: " + year, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for job title: " + title + ", year: " + year, HttpStatus.NOT_FOUND);
         }
     }
   
-    @GetMapping("/salary/genderPayGap") // example = /salary/genderPayGap?fromYear=1980&toYear=2000
-    public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int fromYear, @RequestParam int toYear, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+    @GetMapping("/salary/genderPayGap") // example = /salary/genderPayGap?from=1980&to=2000
+    public HttpEntity<?> getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(@RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException {
         apiKeyService.getAccessLevel(apiKey);
-        Optional<List<Object[]>> list = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(fromYear, toYear);
+        Optional<List<Object[]>> list = salariesService.getGenderPayGapPercentageBetweenTwoYearsForEachJobTitle(from, to);
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + fromYear + " and " + toYear, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + from + " and " + to, HttpStatus.NOT_FOUND);
         }
     }
   

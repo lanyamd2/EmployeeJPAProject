@@ -1,11 +1,6 @@
 package com.bootswana.employeejpaproject.controllers;
 
 import com.bootswana.employeejpaproject.model.dtos.EmployeeDTO;
-import com.bootswana.employeejpaproject.model.dtos.IManagerProjection;
-import com.bootswana.employeejpaproject.service.DepartmentsService;
-import com.bootswana.employeejpaproject.service.EmployeesService;
-import com.bootswana.employeejpaproject.service.SalariesService;
-import org.junit.jupiter.api.Assertions;
 import com.bootswana.employeejpaproject.service.DepartmentsService;
 import com.bootswana.employeejpaproject.service.EmployeesService;
 import com.bootswana.employeejpaproject.service.SalariesService;
@@ -21,9 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,7 +90,7 @@ public class MainControllerTests {
     void testValidLowestAndHighestSalaryForJobTitleDuringAYearEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map<String, BigDecimal>> response = restTemplate.exchange(
-                "http://localhost:8080/salary/range?jobTitle=Senior+Engineer&year=1986&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8",
+                "http://localhost:8080/salary/range?title=Senior+Engineer&year=1986&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -110,7 +103,7 @@ public class MainControllerTests {
     void testInvalidLowestAndHighestSalaryForJobTitleDuringAYearEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.getForEntity("http://localhost:8080/salary/range?jobTitle=Senior+Engineer&year=300&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
+            restTemplate.getForEntity("http://localhost:8080/salary/range?title=Senior+Engineer&year=300&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
             fail();
         } catch (HttpClientErrorException e) {
             if (!e.toString().contains("No results found for job title: Senior Engineer, year: 300")){
@@ -136,7 +129,7 @@ public class MainControllerTests {
     void testValidGenderPayGapPercentageBetweenTwoYearsForEachJobTitleEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<Object[]>> response = restTemplate.exchange(
-                "http://localhost:8080/salary/genderPayGap?fromYear=1998&toYear=2000&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8",
+                "http://localhost:8080/salary/genderPayGap?from=1998&to=2000&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -149,7 +142,7 @@ public class MainControllerTests {
     void testInvalidGenderPayGapPercentageBetweenTwoYearsForEachJobTitleEndpoint() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.getForEntity("http://localhost:8080/salary/genderPayGap?fromYear=298&toYear=300&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
+            restTemplate.getForEntity("http://localhost:8080/salary/genderPayGap?from=298&to=300&apiKey=u4Ip9hbD7VyQqWDrrfjw16_PjtqyRJD8", String.class);
             fail();
         } catch (HttpClientErrorException e) {
             if (!e.toString().contains("No results found for the percentage gender pay gap between years: 298 and 300")){
