@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ApiKeyNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(ApiKeyNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     String apiKeyNotFoundHandler(ApiKeyNotFoundException e){
         return e.getMessage();
     }

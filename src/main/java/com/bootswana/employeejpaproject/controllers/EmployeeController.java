@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,14 +35,13 @@ public class EmployeeController {
             @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam String gender, @RequestParam LocalDate hireDate,
             @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level =apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if(level!=2&&level!=3){
-            message = "Client is not authorised to create a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
+
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
         }
-        message=employeesService.createNewEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
+        String message = employeesService.createNewEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -51,27 +51,30 @@ public class EmployeeController {
             @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam String gender, @RequestParam LocalDate hireDate,
             @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level =apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if(level!=2&&level!=3){
-            message = "Client is not authorised to create a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
         }
-        message=employeesService.updateExistingEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
+        String message = employeesService.updateExistingEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
+
     }
 
-    @DeleteMapping("/employee/delete")
+    @DeleteMapping("/employee")
     public ResponseEntity<?> deleteEmployee(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
-        int level = apiKeyService.getAccessLevel(apiKey);
-        String message;
-        if (level != 3) {
-            message = "Client is not authorised to delete a record";
-            logger.log(Level.WARNING, message);
-            throw new ClientNotAuthorisedException();
-        }
-        message = employeesService.deleteEmployeeById(id);
+        int accessLevel = 3;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        String message = employeesService.deleteEmployeeById(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
+    }
+
+    public boolean isGenderValid(String gender){
+        if(gender.equals("M")){
+            return true;
+        } else if (gender.equals("F")) {
+            return true;
+        }
+        return false;
     }
 }

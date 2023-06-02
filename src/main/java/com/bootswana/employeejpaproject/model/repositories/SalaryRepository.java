@@ -2,6 +2,7 @@ package com.bootswana.employeejpaproject.model.repositories;
 
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTO;
 import com.bootswana.employeejpaproject.model.dtos.SalaryDTOId;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface SalaryRepository extends JpaRepository<SalaryDTO, SalaryDTOId> {
@@ -27,4 +29,8 @@ public interface SalaryRepository extends JpaRepository<SalaryDTO, SalaryDTOId> 
 
     @Query(value="SELECT s.salary FROM employees.salaries s JOIN employees.titles t ON s.emp_no = t.emp_no WHERE t.title=:title AND (s.from_date BETWEEN :start AND :end OR s.to_date BETWEEN :start AND :end OR (s.from_date<=:start AND s.to_date>=:end))",nativeQuery = true)
     List<Double> findByTitleFromDateEndDate(String title, LocalDate start, LocalDate end);
+
+    @Query(value = "SELECT s.salary FROM employees.salaries s WHERE emp_no = :empNo AND from_date = :fromDate", nativeQuery = true)
+    Optional<Integer> findById(int empNo, LocalDate fromDate);
+
 }
