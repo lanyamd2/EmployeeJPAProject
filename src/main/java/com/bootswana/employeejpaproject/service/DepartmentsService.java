@@ -44,7 +44,6 @@ public class DepartmentsService {
             deptMap.forEach(
                     (key, value) -> logger.log(Level.INFO, value + " employees in " + key)
             );
-//            logger.log(Level.INFO, deptMap.toString());
         } else {
             String message = "There are no employees in any department between " + startYear + " and " + endYear + ".";
             logger.log(Level.WARNING, message);
