@@ -39,7 +39,7 @@ public class EmployeeController {
         int accessLevel = 2;
         apiKeyService.checkAccessRights(apiKey, accessLevel);
         if(!isGenderValid(gender)){
-            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.METHOD_NOT_ALLOWED );
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
         }
         String message = employeesService.createNewEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -54,13 +54,14 @@ public class EmployeeController {
         int accessLevel = 2;
         apiKeyService.checkAccessRights(apiKey, accessLevel);
         if(!isGenderValid(gender)){
-            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.METHOD_NOT_ALLOWED );
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
         }
         String message = employeesService.updateExistingEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
         return new ResponseEntity<>(message, HttpStatus.OK);
+
     }
 
-    @DeleteMapping("/employee/delete")
+    @DeleteMapping("/employee")
     public ResponseEntity<?> deleteEmployee(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
         int accessLevel = 3;
         apiKeyService.checkAccessRights(apiKey, accessLevel);

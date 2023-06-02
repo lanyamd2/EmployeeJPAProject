@@ -93,7 +93,7 @@ public class MainController {
             return new ResponseEntity<EmployeeDTO>(employeeDTOOptional.get(), HttpStatus.OK);
         } else {
             logger.log(Level.INFO, "Employee " + id + " not found");
-            return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Employee " + id + " not found", HttpStatus.OK);
         }
     }
 
@@ -106,7 +106,7 @@ public class MainController {
         if(employees.isPresent()) {
             return new ResponseEntity<>(employees.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No employees found working in the " + deptName + " department on " + Utility.getDateAsString(date), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No employees found working in the " + deptName + " department on " + Utility.getDateAsString(date), HttpStatus.OK);
         }
     }
 
@@ -118,7 +118,7 @@ public class MainController {
         if(managers.isPresent()) {
             return new ResponseEntity<>(managers.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No managers found from the " + deptName + " department", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No managers found from the " + deptName + " department", HttpStatus.OK);
         }
     }
   
@@ -130,7 +130,7 @@ public class MainController {
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Employee with last name: " + lastName + ", not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Employee with last name: " + lastName + ", not found", HttpStatus.OK);
         }
     }
   
@@ -143,7 +143,7 @@ public class MainController {
         if (map.isPresent()) {
             return new ResponseEntity<>(map.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for job title: " + title + ", year: " + year, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for job title: " + title + ", year: " + year, HttpStatus.OK);
         }
     }
   
@@ -155,7 +155,7 @@ public class MainController {
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + from + " and " + to, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for the percentage gender pay gap between years: " + from + " and " + to, HttpStatus.OK);
         }
     }
   
@@ -167,7 +167,7 @@ public class MainController {
         if (map.isPresent()) {
             return new ResponseEntity<>(map.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for department: " + department + ", date: " + date, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for department: " + department + ", date: " + date, HttpStatus.OK);
         }
     }
   
@@ -179,7 +179,7 @@ public class MainController {
         if (list.isPresent()) {
             return new ResponseEntity<>(list.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No results found for employee number: " + empNo, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found for employee number: " + empNo, HttpStatus.OK);
         }
     }
   
@@ -193,7 +193,7 @@ public class MainController {
             return new ResponseEntity<DepartmentDTO>(departmentDTOOptional.get(), HttpStatus.OK);
         } else {
             logger.log(Level.INFO, "Department " + id + " not found");
-            return new ResponseEntity<>("Department " + id + " not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Department " + id + " not found", HttpStatus.OK);
         }
     }
   
@@ -207,7 +207,7 @@ public class MainController {
             return new ResponseEntity<>(salary.get(), HttpStatus.OK);
         } else {
             logger.log(Level.INFO, "Salary " + id + " not found");
-            return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Salary " + id + " not found", HttpStatus.OK);
         }
     }
 }
