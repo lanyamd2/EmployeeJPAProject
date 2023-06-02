@@ -83,17 +83,25 @@ public class EmployeesService {
         return Optional.of(managers);
     }
 
-    public String createNewEmployee(EmployeeDTO employeeDTO) {
+    public String createNewEmployee(int id, LocalDate birthDate, String firstName, String lastName, String gender, LocalDate hireDate ) {
         String message;
-        int id=employeeDTO.getId();
+
         Optional<EmployeeDTO> foundEmployee = employeeRepository.findById(id);
+        Optional<EmployeeDTO> duplicateEmployee=employeeRepository.findDuplicateEmployee(birthDate,firstName,lastName,gender,hireDate);
         if (foundEmployee.isPresent()) {
-            message = "Employee with the same id " + id + " found " +
+            message = "Employee with the same ID "+ id + " found " +
                     System.lineSeparator() +
                     foundEmployee.get() +
                     System.lineSeparator() +
-                    "New employee: "+employeeDTO + " not saved!";
-        } else {
+                    "New employee: "+firstName+" "+lastName+ " not saved!";
+        } else if(duplicateEmployee.isPresent()){
+            message = "Duplicate employee found :" +
+                    System.lineSeparator() +
+                    duplicateEmployee.get() +
+                    System.lineSeparator() +
+                    "New employee: "+firstName+" "+lastName+ " not saved!";
+        }else {
+            EmployeeDTO employeeDTO=new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate);
             message="New employee: "+employeeDTO+"  saved!";
             employeeRepository.save(employeeDTO);
         }
@@ -105,7 +113,7 @@ public class EmployeesService {
         int id=employeeDTO.getId();
         Optional<EmployeeDTO> foundEmployee=employeeRepository.findById(id);
         if(foundEmployee.isPresent()){
-            message = "Employee with the same id " + id + " found " +
+            message = "Employee with the same ID " + id + " found " +
                     System.lineSeparator() +
                     foundEmployee.get() +
                     System.lineSeparator() +
