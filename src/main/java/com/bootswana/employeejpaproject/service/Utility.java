@@ -39,4 +39,31 @@ public class Utility {
 
         return Base64.getUrlEncoder().withoutPadding().encodeToString(values); //URL and filename safe
     }
+
+    public static String availableEndpoints() {
+        String endpoints = "Endpoints available: " +
+                System.lineSeparator() +
+                "/" + System.lineSeparator() +
+                "/api/generate/{accessLevel}" + System.lineSeparator() +
+                "/api/check/{apiKey}" + System.lineSeparator() +
+                System.lineSeparator() +
+                "/employee" + System.lineSeparator() +
+                "/employees" + System.lineSeparator() +
+                "/employee/create" + System.lineSeparator() +
+                "/employee/delete" + System.lineSeparator() +
+                "/employees/managers" + System.lineSeparator() +
+                "/employee/lastName" + System.lineSeparator() +
+                System.lineSeparator() +
+                "/department" + System.lineSeparator() +
+                "/departments" + System.lineSeparator() +
+                "/department/create" + System.lineSeparator() +
+                System.lineSeparator() +
+                "/salary" + System.lineSeparator() +
+                "/salary/average" + System.lineSeparator() +
+                "/salary/range" + System.lineSeparator() +
+                "/salary/genderPayGap" + System.lineSeparator() +
+                "/salary/department/average" + System.lineSeparator() +
+                "/salary/progression" + System.lineSeparator();
+        return endpoints;
+    }
 }
