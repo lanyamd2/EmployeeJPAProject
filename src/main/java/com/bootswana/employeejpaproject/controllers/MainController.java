@@ -18,12 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -35,6 +33,7 @@ import java.util.logging.Logger;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
+@RequestMapping("/api")
 public class MainController {
     static Logger logger = Logger.getLogger(MainController.class.getName());
 
@@ -57,6 +56,93 @@ public class MainController {
         this.salaryRepository = salaryRepository;
         this.salariesService = salariesService;
     }
+
+    @GetMapping("/departments")
+    public ResponseEntity<?> getDepartmentCount(@RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        if (from > to) {
+            return new ResponseEntity<>("Invalid year range, the year " + from + " needs to be after " + to, HttpStatus.BAD_REQUEST);
+        } else {
+            HashMap<String, Integer> result = departmentsService.createDepartmentSummary(from, to);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/department/create")
+    public ResponseEntity<?> createDepartment(
+            @RequestBody DepartmentDTO departmentDTO,
+            @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        String message = departmentsService.createNewDepartment(departmentDTO);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/employee")
+    public ResponseEntity<?> createEmployee(
+            @RequestParam Integer id, @RequestParam LocalDate birthDate,
+            @RequestParam String firstName, @RequestParam String lastName,
+            @RequestParam String gender, @RequestParam LocalDate hireDate,
+            @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
+        }
+        String message = employeesService.createNewEmployee(id,birthDate,firstName,lastName,gender,hireDate);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PutMapping("/employee")
+    public ResponseEntity<?> updateEmployee(
+            @RequestParam Integer id, @RequestParam LocalDate birthDate,
+            @RequestParam String firstName, @RequestParam String lastName,
+            @RequestParam String gender, @RequestParam LocalDate hireDate,
+            @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 2;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        if(!isGenderValid(gender)){
+            return  new ResponseEntity<>("Gender fields must be M or F.",HttpStatus.BAD_REQUEST );
+        }
+        String message = employeesService.updateExistingEmployee(new EmployeeDTO(id,birthDate,firstName,lastName,gender,hireDate));
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/employee")
+    public ResponseEntity<?> deleteEmployee(@RequestParam int id, @RequestParam String apiKey) throws ApiKeyNotFoundException, ClientNotAuthorisedException {
+        int accessLevel = 3;
+        apiKeyService.checkAccessRights(apiKey, accessLevel);
+        String message = employeesService.deleteEmployeeById(id);
+        return new ResponseEntity<>(message,HttpStatus.OK);
+    }
+
+    public boolean isGenderValid(String gender){
+        if(gender.equals("M")){
+            return true;
+        } else if (gender.equals("F")) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @GetMapping("/salary/title/average")
+    public ResponseEntity<?> getAverageSalaryByTitleAndYearRange(@RequestParam String title, @RequestParam int from, @RequestParam int to, @RequestParam String apiKey) throws ApiKeyNotFoundException {
+        apiKeyService.getAccessLevel(apiKey);
+        if(from>to){
+            return new ResponseEntity<>("Invalid year range, the year " + from + " needs to be after " + to, HttpStatus.BAD_REQUEST);
+        }
+        double average= salariesService.findAverageSalary(title,from,to);
+        if(average==0){
+            return new ResponseEntity<>("There are no employees with the title " + title + " between the years " + from+ " and " + to + ".", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("The average salary for " + title + " between " + from + " and " + to + " is " + average + ".", HttpStatus.OK);
+        }
+    }
+
 
     @GetMapping("/")
     public ResponseEntity<?> showEndpoints() {
